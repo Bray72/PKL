@@ -424,6 +424,91 @@
     .btn-primary:hover {
         background: var(--itsa-navy-dark);
     }
+
+    /* Bukti perbaikan */
+    .evidence-upload {
+        position: relative;
+        margin: 12px 0 18px;
+        border: 1.5px dashed #b9c9dc;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #f8fbff 0%, #f3f7fc 100%);
+        padding: 20px;
+        transition: .18s ease;
+    }
+
+    .evidence-upload:hover,
+    .evidence-upload.is-dragging {
+        border-color: var(--itsa-navy);
+        background: #eff6ff;
+        box-shadow: 0 0 0 3px rgba(22, 48, 90, .07);
+    }
+
+    .evidence-upload-content {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .evidence-upload-icon {
+        width: 46px;
+        height: 46px;
+        flex: 0 0 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: #e2ebf6;
+        color: var(--itsa-navy);
+    }
+
+    .evidence-upload-title {
+        display: block;
+        margin-bottom: 3px;
+        color: #1e3a5f;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .evidence-upload-help,
+    .evidence-upload-file {
+        margin: 0;
+        color: #71829d;
+        font-size: 12px;
+    }
+
+    .evidence-upload-file {
+        display: none;
+        margin-top: 7px;
+        color: #166534;
+        font-weight: 600;
+    }
+
+    .evidence-upload-file.is-visible { display: block; }
+    .evidence-upload input[type="file"] {
+        display: block;
+        width: 100%;
+        margin-top: 15px;
+        color: #64748b;
+        font: inherit;
+        font-size: 12px;
+    }
+
+    .evidence-upload input[type="file"]::file-selector-button {
+        margin-right: 10px;
+        padding: 8px 12px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--itsa-navy);
+        color: #fff;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+        .evidence-upload { padding: 16px; }
+        .evidence-upload-content { align-items: flex-start; }
+    }
     
     @media (max-width: 768px) {
         .breakdown-grid {
@@ -567,7 +652,7 @@
                                 <textarea name="catatan_validasi" class="form-textarea" placeholder="Jelaskan langkah perbaikan yang telah dilakukan, sertakan commit hash, screenshot, atau referensi lainnya...">{{ $temuan->catatan_validasi }}</textarea>
                                 
                                 <div class="form-group">
-                                    <label for="bukti_perbaikan">
+                                    <label for="bukti_perbaikan_{{ $temuan->id }}">
                                         Gambar Bukti Perbaikan
                                     </label>
 
@@ -587,15 +672,15 @@
                                         </div>
                                     @endif
 
-                                    <div class="upload-box">
-                                        <div class="upload-content">
-                                            <div class="upload-icon">
+                                    <div class="upload-box evidence-upload">
+                                        <div class="upload-content evidence-upload-content">
+                                            <div class="upload-icon evidence-upload-icon">
                                                 📷
                                             </div>
 
                                             <div>
-                                                <strong>Pilih gambar bukti perbaikan</strong>
-                                                <p>
+                                                <strong class="evidence-upload-title">Pilih gambar bukti perbaikan</strong>
+                                                <p class="evidence-upload-help">
                                                     JPG, JPEG, PNG atau WEBP
                                                     • Maksimal 2 MB
                                                 </p>
@@ -605,7 +690,7 @@
                                         <input
                                             type="file"
                                             name="bukti_perbaikan"
-                                            id="bukti_perbaikan"
+                                            id="bukti_perbaikan_{{ $temuan->id }}"
                                             accept=".jpg,.jpeg,.png,.webp"
                                         >
                                     </div>
