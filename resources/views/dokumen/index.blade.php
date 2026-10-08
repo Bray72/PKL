@@ -5,22 +5,22 @@
 <style>
 
     .document-page {
-        background: #f4f7fb;
-        min-height: 100vh;
-        padding: 30px;
+        min-height: 100%;
+        padding: 12px 0 32px;
     }
 
     .page-title {
-        font-size: 32px;
-        font-weight: 700;
-        color: #1f3048;
-        margin-bottom: 5px;
+        font-size: clamp(28px, 2.2vw, 36px);
+        font-weight: 800;
+        letter-spacing: -.04em;
+        color: #1e2b44;
+        margin: 0 0 4px;
     }
 
     .page-subtitle {
-        color: #71829d;
-        font-size: 17px;
-        margin-bottom: 25px;
+        color: #627898;
+        font-size: 16px;
+        margin: 0 0 36px;
     }
 
     /* =========================
@@ -29,24 +29,37 @@
 
     .stat-card {
         background: white;
-        border-radius: 16px;
-        padding: 25px;
-        border: 1px solid #e1e8f1;
+        border-radius: 17px;
+        padding: 29px 30px;
+        border: 1px solid #dce5f0;
         height: 100%;
         display: flex;
         align-items: center;
-        gap: 18px;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.03);
+        gap: 24px;
+        box-shadow: none;
+    }
+
+    /* Tidak bergantung pada Bootstrap grid; kartu selalu 4 kolom di desktop. */
+    .document-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 24px;
+    }
+
+    .document-stats > .col-md-3 {
+        width: auto;
+        max-width: none;
+        padding: 0;
     }
 
     .stat-icon {
         width: 66px;
         height: 66px;
-        border-radius: 14px;
+        border-radius: 13px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 30px;
+        color: #213f67;
     }
 
     .icon-blue {
@@ -72,9 +85,10 @@
     }
 
     .stat-number {
-        color: #1f3048;
-        font-size: 30px;
-        font-weight: 700;
+        color: #1e2b44;
+        font-size: 36px;
+        font-weight: 800;
+        line-height: 1.1;
     }
 
 
@@ -83,11 +97,11 @@
     ========================= */
 
     .upload-box {
-        margin-top: 35px;
+        margin-top: 36px;
         background: white;
         border: 2px dashed #c9d7e8;
         border-radius: 18px;
-        min-height: 300px;
+        min-height: 340px;
 
         display: flex;
         align-items: center;
@@ -114,13 +128,20 @@
         justify-content: center;
 
         margin: auto;
+        color: #101828;
+        font-size: 0;
+    }
+
+    .upload-icon::before {
+        content: "↑";
         font-size: 34px;
+        line-height: 1;
     }
 
     .upload-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: #293b55;
+        font-size: 17px;
+        font-weight: 700;
+        color: #30425e;
         margin-top: 15px;
     }
 
@@ -146,6 +167,50 @@
     .upload-info {
         color: #91a1b8;
         margin-top: 15px;
+    }
+
+    .upload-settings {
+        display: none;
+        margin-top: 20px;
+        padding: 22px;
+        background: #fff;
+        border: 1px solid #e1e8f1;
+        border-radius: 16px;
+    }
+
+    .upload-settings.is-visible { display: block; }
+
+    .upload-submit { display: none; }
+    .upload-submit.is-visible { display: block; }
+
+    /* Metadata is requested only after a file is selected, keeping the first
+       upload view focused on the drop zone. */
+    #uploadForm > .row:first-of-type { display: none; }
+    #uploadForm > .row:first-of-type.is-visible { display: flex; }
+    #uploadForm > .mt-4 { display: none; }
+    #uploadForm > .mt-4.is-visible { display: block; }
+    .document-page > div[style] {
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin-top: 0 !important;
+        padding: 0 !important;
+    }
+    #dropArea { margin-top: 36px !important; min-height: 340px !important; }
+
+    .document-page svg { display: block; }
+
+    @media (max-width: 767.98px) {
+        .document-page { padding-top: 0; }
+        .page-subtitle { margin-bottom: 24px; }
+        .stat-card { padding: 20px; }
+        .upload-box { min-height: 300px; }
+        .document-stats { grid-template-columns: 1fr; }
+    }
+
+    @media (min-width: 768px) and (max-width: 1199.98px) {
+        .document-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
 
@@ -333,7 +398,7 @@
          STATISTICS
     ========================================= --}}
 
-    <div class="row g-4">
+    <div class="document-stats">
 
         <div class="col-md-3">
 
@@ -461,7 +526,7 @@
 
             @csrf
 
-            <div class="row mb-4 g-3">
+            <div class="row mb-4 g-3" id="uploadMetadata">
                 <div class="col-md-4">
                     <label class="form-label fw-semibold" style="color: #50627b;">
                         Pengajuan
@@ -542,7 +607,7 @@
                 </div>
             </div>
 
-            <div class="mt-4 text-end">
+            <div class="mt-4 text-end" id="uploadSubmit">
                 <button
                     type="submit"
                     class="btn btn-pilih"
@@ -976,6 +1041,18 @@
 
     const fileName = document.getElementById('fileName');
 
+    const uploadMetadata = document.getElementById('uploadMetadata');
+
+    const uploadSubmit = document.getElementById('uploadSubmit');
+
+    function showUploadDetails(file) {
+        if (!file) return;
+
+        fileName.innerText = file.name;
+        uploadMetadata.classList.add('is-visible');
+        uploadSubmit.classList.add('is-visible');
+    }
+
 
     fileInput.addEventListener(
         'change',
@@ -983,8 +1060,7 @@
 
             if (this.files.length > 0) {
 
-                fileName.innerText =
-                    this.files[0].name;
+                showUploadDetails(this.files[0]);
 
             }
 
@@ -1033,8 +1109,7 @@
                 fileInput.files =
                     e.dataTransfer.files;
 
-                fileName.innerText =
-                    e.dataTransfer.files[0].name;
+                showUploadDetails(e.dataTransfer.files[0]);
 
             }
 
