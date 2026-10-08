@@ -80,13 +80,13 @@
 
     .stat-title {
         color: #71829d;
-        font-size: 16px;
+        font-size: 18px;
         margin-bottom: 4px;
     }
 
     .stat-number {
         color: #1e2b44;
-        font-size: 36px;
+        font-size: 26px;
         font-weight: 800;
         line-height: 1.1;
     }
@@ -632,16 +632,6 @@
         >
 
             <div class="d-flex flex-wrap gap-2 align-items-center">
-
-                <input
-                    type="text"
-                    name="search"
-                    class="form-control search-box"
-                    style="max-width: 360px;"
-                    placeholder="Cari nama file atau ID pengajuan"
-                    value="{{ request('search') }}"
-                >
-
 
                 <button
                     type="submit"

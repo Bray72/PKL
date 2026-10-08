@@ -552,7 +552,7 @@
                                 {{ $temuan->catatan_validasi ?: 'Belum ada catatan perbaikan dari OPD.' }}
                             </div>
                             <button type="button" class="btn-outline" onclick="showUpdateForm('{{ $temuan->id }}')">
-                                Update Status
+                                Perbaikan
                             </button>
                         </div>
                         
