@@ -25,9 +25,6 @@
                 <div
                      class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-indigo-200 border border-white/10">
 
-                    <span
-                          class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-
                     System Control & Management
 
                 </div>
