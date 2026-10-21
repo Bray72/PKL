@@ -47,7 +47,7 @@ class DokumenController extends Controller
 
         $dokumens = $query->get();
 
-        $ajuans = Ajuan::latest()->get();
+        $ajuans = Ajuan::with(['user', 'temuans'])->latest()->get();
 
         // Statistik
         $totalDokumen = Dokumen::count();

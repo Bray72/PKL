@@ -170,7 +170,6 @@
     }
 
     .upload-settings {
-        display: none;
         margin-top: 20px;
         padding: 22px;
         background: #fff;
@@ -178,26 +177,17 @@
         border-radius: 16px;
     }
 
-    .upload-settings.is-visible { display: block; }
-
-    .upload-submit { display: none; }
-    .upload-submit.is-visible { display: block; }
-
-    /* Metadata is requested only after a file is selected, keeping the first
-       upload view focused on the drop zone. */
-    #uploadForm > .row:first-of-type { display: none; }
-    #uploadForm > .row:first-of-type.is-visible { display: flex; }
-    #uploadForm > .mt-4 { display: none; }
-    #uploadForm > .mt-4.is-visible { display: block; }
+    #uploadForm > .row:first-of-type { display: flex; }
+    #uploadForm > .mt-4 { display: block; }
     .document-page > div[style] {
-        background: transparent !important;
-        border: 0 !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        margin-top: 0 !important;
-        padding: 0 !important;
+        background: #ffffff !important;
+        border: 1px solid #e1e8f1 !important;
+        border-radius: 18px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03) !important;
+        margin-top: 32px !important;
+        padding: 24px 28px !important;
     }
-    #dropArea { margin-top: 36px !important; min-height: 340px !important; }
+    #dropArea { margin-top: 20px !important; min-height: 220px !important; }
 
     .document-page svg { display: block; }
 
@@ -533,12 +523,15 @@
                     </label>
                     <select
                         name="ajuan_id"
+                        id="ajuanSelect"
                         class="form-select search-box"
                         required
                     >
-                        <option value="">-- Pilih Pengajuan --</option>
+                        <option value="">-- Pilih ID Pengajuan --</option>
                         @foreach($ajuans as $ajuan)
-                            <option value="{{ $ajuan->id }}">Pengajuan #{{ $ajuan->id }}</option>
+                            <option value="{{ $ajuan->id }}" {{ (string) request('ajuan_id', old('ajuan_id')) === (string) $ajuan->id ? 'selected' : '' }}>
+                                [ID #{{ $ajuan->id }}] {{ $ajuan->nomor_ajuan ?? 'Tanpa Nomor' }} — {{ $ajuan->nama_aplikasi }} ({{ $ajuan->user->name ?? 'OPD' }})
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -567,6 +560,7 @@
                     </label>
                     <select
                         name="temuan_id"
+                        id="temuanSelect"
                         class="form-select search-box"
                     >
                         <option value="">-- Tidak terkait temuan --</option>
@@ -680,7 +674,7 @@
                 <select
                     name="ajuan_id"
                     class="form-select"
-                    style="max-width: 220px;"
+                    style="max-width: 320px;"
                     onchange="this.form.submit()"
                 >
 
@@ -695,7 +689,7 @@
                             {{ request('ajuan_id') == $ajuan->id ? 'selected' : '' }}
                         >
 
-                            Pengajuan #{{ $ajuan->id }}
+                            [#{{ $ajuan->id }}] {{ $ajuan->nomor_ajuan ?? 'Pengajuan #'.$ajuan->id }} — {{ $ajuan->nama_aplikasi }}
 
                         </option>
 
@@ -889,9 +883,15 @@
                             {{-- PENGAJUAN --}}
 
                             <td>
-
-                                Pengajuan #{{ $dokumen->ajuan_id }}
-
+                                <div style="font-weight: 700; color: #1e2b44;">
+                                    {{ $dokumen->ajuan->nomor_ajuan ?? 'ID #'.$dokumen->ajuan_id }}
+                                </div>
+                                <div style="font-size: 11px; color: #627898;">
+                                    {{ $dokumen->ajuan->nama_aplikasi ?? '-' }}
+                                    @if(isset($dokumen->ajuan->user))
+                                        • {{ $dokumen->ajuan->user->name }}
+                                    @endif
+                                </div>
                             </td>
 
 
@@ -1043,69 +1043,71 @@
         uploadSubmit.classList.add('is-visible');
     }
 
-
-    fileInput.addEventListener(
-        'change',
-        function () {
-
-            if (this.files.length > 0) {
-
-                showUploadDetails(this.files[0]);
-
-            }
-
+    fileInput.addEventListener('change', function () {
+        if (this.files.length > 0) {
+            showUploadDetails(this.files[0]);
         }
-    );
+    });
 
+    dropArea.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dropArea.classList.add('dragover');
+    });
 
-    dropArea.addEventListener(
-        'dragover',
-        function (e) {
+    dropArea.addEventListener('dragleave', function () {
+        dropArea.classList.remove('dragover');
+    });
 
-            e.preventDefault();
-
-            dropArea.classList.add(
-                'dragover'
-            );
-
+    dropArea.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            showUploadDetails(e.dataTransfer.files[0]);
         }
-    );
+    });
 
+    const ajuanSelect = document.getElementById('ajuanSelect');
+    const temuanSelect = document.getElementById('temuanSelect');
 
-    dropArea.addEventListener(
-        'dragleave',
-        function () {
+    const ajuanTemuans = {
+        @foreach($ajuans as $ajuan)
+            "{{ $ajuan->id }}": [
+                @foreach($ajuan->temuans as $temuan)
+                    {
+                        id: {{ $temuan->id }},
+                        judul: @json($temuan->judul ?? 'Temuan #'.$temuan->id)
+                    },
+                @endforeach
+            ],
+        @endforeach
+    };
 
-            dropArea.classList.remove(
-                'dragover'
-            );
+    function updateTemuanOptions(selectedAjuanId) {
+        if (!temuanSelect) return;
+        temuanSelect.innerHTML = '<option value="">-- Tidak terkait temuan --</option>';
 
+        if (!selectedAjuanId || !ajuanTemuans[selectedAjuanId]) return;
+
+        const list = ajuanTemuans[selectedAjuanId];
+        list.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = `Temuan #${item.id} — ${item.judul}`;
+            temuanSelect.appendChild(opt);
+        });
+    }
+
+    if (ajuanSelect) {
+        ajuanSelect.addEventListener('change', function () {
+            updateTemuanOptions(this.value);
+        });
+
+        // Initialize on load if ajuan_id is pre-selected
+        if (ajuanSelect.value) {
+            updateTemuanOptions(ajuanSelect.value);
         }
-    );
-
-
-    dropArea.addEventListener(
-        'drop',
-        function (e) {
-
-            e.preventDefault();
-
-            dropArea.classList.remove(
-                'dragover'
-            );
-
-            if (e.dataTransfer.files.length > 0) {
-
-                fileInput.files =
-                    e.dataTransfer.files;
-
-                showUploadDetails(e.dataTransfer.files[0]);
-
-            }
-
-        }
-    );
-
+    }
 </script>
 
 @endsection
