@@ -62,6 +62,17 @@
         color: #213f67;
     }
 
+    .stat-symbol {
+        display: inline-flex;
+        width: 30px;
+        height: 30px;
+    }
+
+    .stat-symbol svg {
+        width: 100%;
+        height: 100%;
+    }
+
     .icon-blue {
         background: #edf5ff;
     }
@@ -395,7 +406,11 @@
             <div class="stat-card">
 
                 <div class="stat-icon icon-blue">
-                    📁
+                    <span class="stat-symbol" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
+                        </svg>
+                    </span>
                 </div>
 
                 <div>
@@ -420,7 +435,11 @@
             <div class="stat-card">
 
                 <div class="stat-icon icon-purple">
-                    📄
+                    <span class="stat-symbol" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 3h8l4 4v14H6V3Zm8 0v5h5M9 13h6m-6 4h6"/>
+                        </svg>
+                    </span>
                 </div>
 
                 <div>
@@ -445,7 +464,11 @@
             <div class="stat-card">
 
                 <div class="stat-icon icon-green">
-                    📋
+                    <span class="stat-symbol" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5h6m-7 3h8M7 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2M7 12h8m-8 4h6"/>
+                        </svg>
+                    </span>
                 </div>
 
                 <div>
@@ -470,7 +493,11 @@
             <div class="stat-card">
 
                 <div class="stat-icon icon-pink">
-                    💾
+                    <span class="stat-symbol" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h12l3 3v15H5V3Zm3 0v6h8V3M8 16h8"/>
+                        </svg>
+                    </span>
                 </div>
 
                 <div>

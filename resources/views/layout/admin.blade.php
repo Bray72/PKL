@@ -459,7 +459,9 @@
             <header class="itsa-topbar">
 
                 <button type="button" class="itsa-menu-button" data-sidebar-toggle aria-label="Buka menu">
-                    ☰
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
                 </button>
 
                 <div class="itsa-topbar-brand">
