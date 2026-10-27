@@ -21,7 +21,7 @@ class AdminSeeder extends Seeder
                 'role_id' => 1,
                 'name' => 'Admin ITSA',
                 'password' => 'password123',
-                'instansi' => 'ITSA',
+                'opd' => 'ITSA',
             ]
         );
     }

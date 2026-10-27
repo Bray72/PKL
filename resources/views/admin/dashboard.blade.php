@@ -66,7 +66,6 @@
         <!-- Stat Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-
             <!-- Card 1: Total OPD -->
             <div
                  class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
