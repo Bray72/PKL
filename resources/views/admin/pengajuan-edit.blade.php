@@ -256,8 +256,9 @@
                     >
 
                         @foreach([
-                            'Pengajuan',
+                            'Diajukan',
                             'Proses Pengujian',
+                            'Dalam Perbaikan',
                             'Selesai'
                         ] as $status)
 

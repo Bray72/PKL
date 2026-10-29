@@ -244,30 +244,27 @@
 
                     <a href="{{ route('admin.dashboard') }}"
                        class="px-3 py-1.5 {{ !request('status') ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-semibold rounded-lg shrink-0 transition-colors">
-
                         Semua ({{ $totalAjuan }})
-
                     </a>
 
-                    <a href="{{ route('admin.dashboard', ['status' => 'pending']) }}"
-                       class="px-3 py-1.5 {{ request('status') == 'pending' ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-medium rounded-lg shrink-0 transition-colors">
-
-                        Menunggu Review
-
+                    <a href="{{ route('admin.dashboard', ['status' => 'diajukan']) }}"
+                       class="px-3 py-1.5 {{ in_array(request('status'), ['diajukan', 'pending']) ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-medium rounded-lg shrink-0 transition-colors">
+                        Diajukan ({{ $diajukanCount }})
                     </a>
 
-                    <a href="{{ route('admin.dashboard', ['status' => 'ujipetik']) }}"
-                       class="px-3 py-1.5 {{ request('status') == 'ujipetik' ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-medium rounded-lg shrink-0 transition-colors">
+                    <a href="{{ route('admin.dashboard', ['status' => 'dalam_pengajuan']) }}"
+                       class="px-3 py-1.5 {{ in_array(request('status'), ['dalam_pengajuan', 'ujipetik', 'proses']) ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-medium rounded-lg shrink-0 transition-colors">
+                        Dalam Pengajuan ({{ $dalamPengajuanCount }})
+                    </a>
 
-                        Ujipetik
-
+                    <a href="{{ route('admin.dashboard', ['status' => 'menunggu_perbaikan']) }}"
+                       class="px-3 py-1.5 {{ in_array(request('status'), ['menunggu_perbaikan', 'perbaikan']) ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-medium rounded-lg shrink-0 transition-colors">
+                        Menunggu Perbaikan ({{ $menungguPerbaikanCount }})
                     </a>
 
                     <a href="{{ route('admin.dashboard', ['status' => 'selesai']) }}"
                        class="px-3 py-1.5 {{ request('status') == 'selesai' ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-medium rounded-lg shrink-0 transition-colors">
-
                         Selesai ({{ $selesaiCount }})
-
                     </a>
 
                 </div>
@@ -345,12 +342,12 @@
                                                 <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
                                                 {{ $ajuan->status }}
                                             </span>
-                                        @elseif (str_contains($st, 'proses') || str_contains($st, 'ujipetik') || str_contains($st, 'diproses'))
+                                        @elseif (str_contains($st, 'dalam pengajuan') || str_contains($st, 'proses') || str_contains($st, 'ujipetik') || str_contains($st, 'diproses'))
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                                                 {{ $ajuan->status }}
                                             </span>
-                                        @elseif (str_contains($st, 'pengajuan') || str_contains($st, 'verifikasi') || str_contains($st, 'menunggu') || str_contains($st, 'pending'))
+                                        @elseif (str_contains($st, 'diajukan') || str_contains($st, 'pengajuan') || str_contains($st, 'verifikasi') || str_contains($st, 'menunggu') || str_contains($st, 'pending'))
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                                                 {{ $ajuan->status }}

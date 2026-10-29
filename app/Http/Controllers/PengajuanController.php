@@ -65,7 +65,7 @@ class PengajuanController extends Controller
             'tujuan_assessment'  => 'required|string|max:1000',
             'tanggal_assessment' => 'nullable|date',
             'catatan'            => 'nullable|string|max:2000',
-            'status'             => 'required|in:Pengajuan,Proses Pengujian,Selesai',
+            'status'             => 'required|in:Diajukan,Proses Pengujian,Dalam Perbaikan,Selesai',
         ], [
             'nama_aplikasi.required'     => 'Nama Aplikasi wajib diisi.',
             'tujuan_assessment.required' => 'Tujuan assessment wajib diisi.',
@@ -122,7 +122,7 @@ class PengajuanController extends Controller
             'tujuan_assessment'  => 'required|string|max:1000',
             'tanggal_assessment' => 'nullable|date',
             'catatan'            => 'nullable|string|max:2000',
-            'status'             => 'required|in:Pengajuan,Proses Pengujian,Selesai',
+            'status'             => 'required|in:Diajukan,Proses Pengujian,Dalam Perbaikan,Selesai',
         ]);
 
         $ajuan->update([
