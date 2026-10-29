@@ -14,11 +14,11 @@ class RemediasiController extends Controller
      */
     public function index()
     {
-        $biro = auth()->user()->biro;
+        $opd = auth()->user()->opd;
 
         $temuans = Temuan::with(['ajuan.user'])
-            ->whereHas('ajuan.user', function ($query) use ($biro) {
-                $query->where('biro', $biro);
+            ->whereHas('ajuan.user', function ($query) use ($opd) {
+                $query->where('opd', $opd);
             })
             ->latest()
             ->get();
@@ -50,16 +50,24 @@ class RemediasiController extends Controller
                 ->first();
 
             if ($oldDokumen) {
-                if (Storage::disk('public')->exists($oldDokumen->path_file)) {
-                    Storage::disk('public')->delete($oldDokumen->path_file);
+                if ($oldDokumen->path_file) {
+                    try {
+                        if (Storage::disk('supabase')->exists($oldDokumen->path_file)) {
+                            Storage::disk('supabase')->delete($oldDokumen->path_file);
+                        }
+                    } catch (\Throwable $e) {}
+
+                    if (Storage::disk('public')->exists($oldDokumen->path_file)) {
+                        Storage::disk('public')->delete($oldDokumen->path_file);
+                    }
                 }
                 $oldDokumen->delete();
             }
 
             $file = $request->file('bukti_perbaikan');
 
-            // Simpan ke storage/app/public/dokumen/bukti-perbaikan
-            $path = $file->store('dokumen/bukti-perbaikan', 'public');
+            // Simpan ke Supabase Storage di folder dokumen/bukti-perbaikan
+            $path = $file->store('dokumen/bukti-perbaikan', 'supabase');
 
             // Simpan informasi file ke tabel dokumens
             Dokumen::create([

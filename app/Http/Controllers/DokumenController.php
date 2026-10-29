@@ -66,12 +66,17 @@ class DokumenController extends Controller
         $totalUkuran = 0;
 
         foreach ($dokumens as $dokumen) {
-            if (
-                $dokumen->path_file &&
-                Storage::disk('public')->exists($dokumen->path_file)
-            ) {
-                $totalUkuran += Storage::disk('public')
-                    ->size($dokumen->path_file);
+            if ($dokumen->path_file) {
+                try {
+                    if (Storage::disk('supabase')->exists($dokumen->path_file)) {
+                        $totalUkuran += Storage::disk('supabase')->size($dokumen->path_file);
+                        continue;
+                    }
+                } catch (\Throwable $e) {}
+
+                if (Storage::disk('public')->exists($dokumen->path_file)) {
+                    $totalUkuran += Storage::disk('public')->size($dokumen->path_file);
+                }
             }
         }
 
@@ -87,7 +92,7 @@ class DokumenController extends Controller
 
 
     /**
-     * Upload dokumen
+     * Upload dokumen ke Supabase
      */
     public function store(Request $request)
     {
@@ -107,10 +112,11 @@ class DokumenController extends Controller
 
         $namaFile = $file->getClientOriginalName();
 
-        $path = $file->store('dokumen', 'public');
+        // Simpan langsung ke Supabase Storage
+        $path = $file->store('dokumen', 'supabase');
 
         if (!$path) {
-            return back()->with('error', 'File gagal disimpan.');
+            return back()->with('error', 'File gagal disimpan ke Supabase.');
         }
 
         Dokumen::create([
@@ -126,7 +132,7 @@ class DokumenController extends Controller
 
         return redirect()
             ->route('dokumen.index')
-            ->with('success', 'Dokumen berhasil diupload.');
+            ->with('success', 'Dokumen berhasil diupload ke Supabase.');
     }
 
 
@@ -144,20 +150,29 @@ class DokumenController extends Controller
             403
         );
 
-        if (
-            !Storage::disk('public')
-                ->exists($dokumen->path_file)
-        ) {
-            return back()->with(
-                'error',
-                'File tidak ditemukan.'
+        if (!$dokumen->path_file) {
+            return back()->with('error', 'File tidak ditemukan.');
+        }
+
+        // Cek di disk supabase
+        try {
+            if (Storage::disk('supabase')->exists($dokumen->path_file)) {
+                return Storage::disk('supabase')->download(
+                    $dokumen->path_file,
+                    $dokumen->nama_file
+                );
+            }
+        } catch (\Throwable $e) {}
+
+        // Fallback cek di disk public lokal
+        if (Storage::disk('public')->exists($dokumen->path_file)) {
+            return Storage::disk('public')->download(
+                $dokumen->path_file,
+                $dokumen->nama_file
             );
         }
 
-        return Storage::disk('public')->download(
-            $dokumen->path_file,
-            $dokumen->nama_file
-        );
+        return back()->with('error', 'File tidak ditemukan di server.');
     }
 
 
@@ -168,13 +183,16 @@ class DokumenController extends Controller
     {
         $dokumen = Dokumen::findOrFail($id);
 
-        if (
-            $dokumen->path_file &&
-            Storage::disk('public')
-                ->exists($dokumen->path_file)
-        ) {
-            Storage::disk('public')
-                ->delete($dokumen->path_file);
+        if ($dokumen->path_file) {
+            try {
+                if (Storage::disk('supabase')->exists($dokumen->path_file)) {
+                    Storage::disk('supabase')->delete($dokumen->path_file);
+                }
+            } catch (\Throwable $e) {}
+
+            if (Storage::disk('public')->exists($dokumen->path_file)) {
+                Storage::disk('public')->delete($dokumen->path_file);
+            }
         }
 
         $dokumen->delete();

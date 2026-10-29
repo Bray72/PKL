@@ -139,18 +139,27 @@
     }
 
     .status-sudah {
-        background: #dcfce7;
-        color: #15803d;
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
     }
 
     .status-sedang {
-        background: #fef3c7;
-        color: #a16207;
+        background: #fff7ed;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+    }
+
+    .status-pengajuan {
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
     }
 
     .status-belum {
-        background: #fee2e2;
-        color: #dc2626;
+        background: #fff1f2;
+        color: #e11d48;
+        border: 1px solid #fecdd3;
     }
 
     .temuan-arrow {
@@ -568,9 +577,11 @@
                     default => 'sedang',
                 };
 
-                $statusClass = match($status) {
-                    'Selesa' => 'status-sudah',
-                    'belum diperbaiki' => 'status-belum',
+                $statusClass = match(true) {
+                    str_contains($status, 'selesai') => 'status-sudah',
+                    str_contains($status, 'perbaikan') || str_contains($status, 'remediasi') => 'status-sedang',
+                    str_contains($status, 'pengajuan') || str_contains($status, 'menunggu') => 'status-pengajuan',
+                    str_contains($status, 'belum') => 'status-belum',
                     default => 'status-sedang',
                 };
             @endphp
@@ -664,7 +675,7 @@
                                         <div style="margin-bottom: 12px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
                                             <p style="margin: 0 0 8px 0; font-size: 13px; color: #64748b;">File saat ini:</p>
                                             <div style="display: flex; align-items: center; gap: 10px;">
-                                                <a href="{{ Storage::url($bukti->path_file) }}" target="_blank" style="color: var(--itsa-navy); text-decoration: none; font-weight: 600; font-size: 14px;">
+                                                <a href="{{ $bukti->file_url }}" target="_blank" style="color: var(--itsa-navy); text-decoration: none; font-weight: 600; font-size: 14px;">
                                                     📄 {{ $bukti->nama_file }}
                                                 </a>
                                             </div>

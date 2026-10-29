@@ -354,7 +354,9 @@
         <aside class="itsa-sidebar" id="itsaSidebar">
 
             <div class="itsa-sidebar-brand">
-                <div class="itsa-sidebar-logo">IT</div>
+                <div class="itsa-sidebar-logo" style="padding: 4px;">
+                    <img src="https://static.diginusantara.com/2025/02/15/logo-kominfo-jatim-Zpmey.png" alt="Logo Kominfo Jatim" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
                 <div>
                     <p class="itsa-sidebar-title">Portal ITSA</p>
                     <p class="itsa-sidebar-subtitle">Prov. Jawa Timur</p>
@@ -465,7 +467,9 @@
                 </button>
 
                 <div class="itsa-topbar-brand">
-                    <div class="itsa-sidebar-logo">IT</div>
+                    <div class="itsa-sidebar-logo" style="padding: 4px;">
+                    <img src="https://static.diginusantara.com/2025/02/15/logo-kominfo-jatim-Zpmey.png" alt="Logo Kominfo Jatim" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
                     <p class="itsa-topbar-title">Portal ITSA</p>
                 </div>
 

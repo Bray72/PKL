@@ -29,7 +29,7 @@ class AuthController extends Controller
                 'unique:users,email',
             ],
 
-            'biro' => [
+            'opd' => [
                 'required',
                 'string',
                 'max:255',
@@ -48,7 +48,7 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
-            'biro' => $validated['biro'],
+            'opd' => $validated['opd'],
         ]);
 
         Auth::login($user);

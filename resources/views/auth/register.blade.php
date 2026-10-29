@@ -187,18 +187,18 @@
                 <!-- Nama OPD (Full Width) -->
                 <div class="md:col-span-2">
 
-                    <label for="biro"
+                    <label for="opd"
                            class="block text-xs md:text-sm font-semibold text-[#1b365d] mb-1.5">
 
-                        Nama BIRO
+                        Nama OPD
 
                     </label>
 
                     <input type="text"
-                           id="biro"
-                           name="biro"
-                           value="{{ old('biro') }}"
-                           placeholder="Dinas / Badan / Biro..."
+                           id="opd"
+                           name="opd"
+                           value="{{ old('opd') }}"
+                           placeholder="Dinas / Badan / Opd..."
                            required
                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1b365d]/20 focus:border-[#1b365d] transition-all">
 

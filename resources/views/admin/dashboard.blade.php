@@ -38,7 +38,7 @@
 
                 <p class="text-slate-200 text-sm max-w-xl font-normal">
 
-                    Kelola pengajuan uji keamanan informasi dari seluruh BIRO Pemprov Jawa Timur, verifikasi berkas, dan pantau status assessment.
+                    Kelola pengajuan uji keamanan informasi dari seluruh OPD Pemprov Jawa Timur, dan pantau status assessment.
 
                 </p>
 
@@ -72,16 +72,16 @@
 
                 <div>
 
-                    <p class="text-xs font-medium text-slate-500 mb-1">BIRO
+                    <p class="text-xs font-medium text-slate-500 mb-1">OPD
                         Terdaftar</p>
 
                     <h3 class="text-2xl font-bold text-[#1b365d]">
-                        {{ $totalbiro }}</h3>
+                        {{ $totalopd }}</h3>
 
                     <span
                           class="text-[11px] text-indigo-600 font-semibold inline-flex items-center gap-0.5 mt-1">
 
-                        Akun BIRO Aktif
+                        Akun OPD Aktif
 
                     </span>
 
@@ -198,13 +198,13 @@
 
                         <h3 class="text-lg font-bold text-[#1b365d]">
 
-                            Semua Pengajuan Assessment BIRO
+                            Semua Pengajuan Assessment OPD
 
                         </h3>
 
                         <p class="text-xs text-slate-500">
 
-                            Kelola dan ubah status pengajuan dari seluruh BIRO
+                            Kelola dan ubah status pengajuan dari seluruh OPD
 
                         </p>
 
@@ -219,7 +219,7 @@
                         <input type="text"
                                name="search"
                                value="{{ request('search') }}"
-                               placeholder="Cari BIRO / aplikasi..."
+                               placeholder="Cari OPD / aplikasi..."
                                class="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1b365d]/20 focus:border-[#1b365d] w-full sm:w-56 transition-all">
 
                         <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"
@@ -286,7 +286,7 @@
 
                                 <th class="py-3.5 px-4">No. Ajuan</th>
 
-                                <th class="py-3.5 px-4">BIRO</th>
+                                <th class="py-3.5 px-4">OPD</th>
 
                                 <th class="py-3.5 px-4">Aplikasi</th>
 
@@ -313,7 +313,7 @@
                                     <td class="py-3.5 px-4">
 
                                         <div class="font-bold text-slate-800">
-                                            {{ $ajuan->user->biro ?? ($ajuan->user->name ?? '-') }}
+                                            {{ $ajuan->user->opd ?? ($ajuan->user->name ?? '-') }}
                                         </div>
 
                                         <div
@@ -331,45 +331,36 @@
                                     </td>
 
                                     <td class="py-3.5 px-4">
+                                        @php
+                                            $st = strtolower($ajuan->status ?? '');
+                                        @endphp
 
-                                        @if (in_array(strtolower($ajuan->status), ['selesai']))
-
-                                            <span
-                                                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-
-                                                <span
-                                                      class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-
+                                        @if (str_contains($st, 'selesai'))
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                                 {{ $ajuan->status }}
-
                                             </span>
-
-                                        @elseif(in_array(strtolower($ajuan->status), ['diproses', 'ujipetik', 'proses ujipetik']))
-
-                                            <span
-                                                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-
-                                                <span
-                                                      class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-
+                                        @elseif (str_contains($st, 'perbaikan') || str_contains($st, 'remediasi'))
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
                                                 {{ $ajuan->status }}
-
                                             </span>
-
+                                        @elseif (str_contains($st, 'proses') || str_contains($st, 'ujipetik') || str_contains($st, 'diproses'))
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                {{ $ajuan->status }}
+                                            </span>
+                                        @elseif (str_contains($st, 'pengajuan') || str_contains($st, 'verifikasi') || str_contains($st, 'menunggu') || str_contains($st, 'pending'))
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                                {{ $ajuan->status }}
+                                            </span>
                                         @else
-
-                                            <span
-                                                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
-
-                                                <span
-                                                      class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-50 text-slate-700 border border-slate-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
                                                 {{ $ajuan->status }}
-
                                             </span>
-
                                         @endif
-
                                     </td>
 
                                 </tr>
@@ -382,7 +373,7 @@
                                         class="py-8 text-center text-slate-400">
 
                                         <p class="font-medium text-slate-600">
-                                            Belum ada pengajuan BIRO</p>
+                                            Belum ada pengajuan OPD</p>
 
                                     </td>
 

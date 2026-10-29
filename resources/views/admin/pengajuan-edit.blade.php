@@ -148,7 +148,7 @@
                 <div class="form-group">
 
                     <label class="form-label">
-                        BIRO
+                        OPD
                     </label>
 
                     <select
@@ -163,7 +163,7 @@
                                 value="{{ $user->id }}"
                                 {{ old('user_id', $ajuan->user_id) == $user->id ? 'selected' : '' }}
                             >
-                                {{ $user->biro }}
+                                {{ $user->opd }}
                             </option>
 
                         @endforeach

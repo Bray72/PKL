@@ -301,6 +301,24 @@
         border: 1px solid #bfdbfe;
     }
 
+    .badge-status-selesai {
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
+    }
+
+    .badge-status-perbaikan {
+        background: #fff7ed;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+    }
+
+    .badge-status-proses {
+        background: #fffbeb;
+        color: #d97706;
+        border: 1px solid #fde68a;
+    }
+
 
     /* =========================
        EMPTY
@@ -664,7 +682,19 @@
                             </td>
 
                             <td>
-                                <span class="badge badge-status">
+                                @php
+                                    $stTemuan = strtolower($temuan->status ?? '');
+                                    if (str_contains($stTemuan, 'selesai')) {
+                                        $tStatusClass = 'badge-status-selesai';
+                                    } elseif (str_contains($stTemuan, 'perbaikan') || str_contains($stTemuan, 'remediasi')) {
+                                        $tStatusClass = 'badge-status-perbaikan';
+                                    } elseif (str_contains($stTemuan, 'proses')) {
+                                        $tStatusClass = 'badge-status-proses';
+                                    } else {
+                                        $tStatusClass = 'badge-status';
+                                    }
+                                @endphp
+                                <span class="badge {{ $tStatusClass }}">
                                     {{ $temuan->status ?? '-' }}
                                 </span>
                             </td>
@@ -675,7 +705,7 @@
                                 @endphp
                                 
                                 @if($dokumen && $dokumen->path_file)
-                                    <a href="{{ asset('storage/' . $dokumen->path_file) }}" target="_blank" class="btn btn-sm" style="background:#f1f5f9; color:#334155; border-radius:6px; padding:6px 12px; font-size:11px; text-decoration:none; font-weight:600;">Lihat Gambar</a>
+                                    <a href="{{ $dokumen->file_url }}" target="_blank" class="btn btn-sm" style="background:#f1f5f9; color:#334155; border-radius:6px; padding:6px 12px; font-size:11px; text-decoration:none; font-weight:600;">Lihat Gambar</a>
                                 @else
                                     <span style="font-size:11px; color:#94a3b8;">Tidak ada</span>
                                 @endif

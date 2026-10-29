@@ -19,7 +19,7 @@ class AdminDashboardController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('nama_aplikasi', 'like', "%{$search}%")
                     ->orWhere('nomor_ajuan', 'like', "%{$search}%")
-                    ->orWhereHas('user', fn($u) => $u->where('biro', 'like', "%{$search}%")->orWhere('name', 'like', "%{$search}%"));
+                    ->orWhereHas('user', fn($u) => $u->where('opd', 'like', "%{$search}%")->orWhere('name', 'like', "%{$search}%"));
             });
         }
 
@@ -30,7 +30,7 @@ class AdminDashboardController extends Controller
         $ajuans = $query->latest()->get();
 
         // Statistics
-        $totalbiro = User::where('role_id', 2)->count();
+        $totalopd = User::where('role_id', 2)->count();
         $totalAjuan = Ajuan::count();
         $prosesCount = Ajuan::whereIn('status', ['diproses', 'ujipetik', 'pending', 'menunggu', 'Sedang Diproses', 'Proses Ujipetik', 'Perlu Verifikasi'])->count();
         $selesaiCount = Ajuan::whereIn('status', ['selesai', 'Selesai'])->count();
@@ -49,7 +49,7 @@ class AdminDashboardController extends Controller
 
         return view('admin.dashboard', compact(
             'ajuans',
-            'totalbiro',
+            'totalopd',
             'totalAjuan',
             'prosesCount',
             'selesaiCount',

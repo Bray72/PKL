@@ -15,7 +15,7 @@ class PengajuanController extends Controller
     public function index(Request $request)
     {
         $query = Ajuan::with('user');
-        $users = User::orderBy('biro')->get();
+        $users = User::orderBy('opd')->get();
 
         // Filter pencarian
         if ($request->filled('search')) {
@@ -24,7 +24,7 @@ class PengajuanController extends Controller
                 $q->where('nama_aplikasi', 'like', "%{$search}%")
                     ->orWhere('nomor_ajuan', 'like', "%{$search}%")
                     ->orWhereHas('user', fn($u) => $u
-                        ->where('biro', 'like', "%{$search}%")
+                        ->where('opd', 'like', "%{$search}%")
                         ->orWhere('name', 'like', "%{$search}%")
                     );
             });
@@ -106,7 +106,7 @@ class PengajuanController extends Controller
 
     public function edit(Ajuan $ajuan)
     {
-        $users = User::orderBy('biro')->get();
+        $users = User::orderBy('opd')->get();
 
         return view('admin.pengajuan-edit', compact(
             'ajuan',

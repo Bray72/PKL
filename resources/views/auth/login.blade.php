@@ -38,12 +38,9 @@
     <div class="flex flex-col items-center mb-6 text-center">
 
         <!-- Logo Icon -->
-        <div
-             class="w-14 h-14 bg-[#1b365d] rounded-2xl flex items-center justify-center shadow-md mb-4">
-
-            <span class="text-white font-extrabold text-xl tracking-wider">IT</span>
-
-        </div>
+        <img src="https://static.diginusantara.com/2025/02/15/logo-kominfo-jatim-Zpmey.png"
+             alt="Logo Diskominfo Jatim"
+             class="h-16 w-auto object-contain mb-4">
 
 
         <!-- Header Text -->

@@ -155,22 +155,30 @@
                                     $st = strtolower($ajuan->status);
                                 @endphp
 
-                                @if ($st === 'selesai')
+                                @if (str_contains($st, 'selesai'))
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                        Selesai
+                                        {{ $ajuan->status }}
                                     </span>
-
-                                @elseif ($st === 'proses pengujian')
+                                @elseif (str_contains($st, 'perbaikan') || str_contains($st, 'remediasi'))
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                                        {{ $ajuan->status }}
+                                    </span>
+                                @elseif (str_contains($st, 'proses') || str_contains($st, 'ujipetik') || str_contains($st, 'diproses'))
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                                        Proses Pengujian
+                                        {{ $ajuan->status }}
                                     </span>
-
+                                @elseif (str_contains($st, 'pengajuan') || str_contains($st, 'verifikasi') || str_contains($st, 'menunggu') || str_contains($st, 'pending'))
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                        {{ $ajuan->status }}
+                                    </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-50 text-sky-700 border border-sky-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
-                                        Pengajuan
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-50 text-slate-700 border border-slate-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        {{ $ajuan->status }}
                                     </span>
                                 @endif
 

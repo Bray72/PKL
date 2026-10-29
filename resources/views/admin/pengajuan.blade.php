@@ -8,7 +8,7 @@
     .badge-selesai     { background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; }
     .badge-proses      { background:#fffbeb; color:#d97706; border:1px solid #fde68a; }
     .badge-validasi    { background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; }
-    .badge-perbaikan   { background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; }
+    .badge-perbaikan   { background:#fff7ed; color:#ea580c; border:1px solid #fed7aa; }
     .badge-dijadwalkan { background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe; }
     .badge-default     { background:#f8fafc; color:#475569; border:1px solid #e2e8f0; }
 
@@ -365,7 +365,7 @@
                     @foreach ($users as $user)
                         <option value="{{ $user->id }}"
                             {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                            {{ $user->biro }}
+                            {{ $user->opd }}
                         </option>
                     @endforeach
                 </select>
@@ -518,7 +518,7 @@
                         {{-- OPD --}}
                         <td>
                             <div class="opd-name">
-                                {{ $ajuan->user->biro ?? ($ajuan->user->name ?? '-') }}
+                                {{ $ajuan->user->opd ?? ($ajuan->user->name ?? '-') }}
                             </div>
                         </td>
 
@@ -550,12 +550,12 @@
                                 $s = strtolower($ajuan->status ?? '');
                                 if (str_contains($s, 'selesai')) {
                                     $cls = 'badge-selesai'; $dot = '#059669';
+                                } elseif (str_contains($s, 'perbaikan') || str_contains($s, 'remediasi')) {
+                                    $cls = 'badge-perbaikan'; $dot = '#ea580c';
                                 } elseif (str_contains($s, 'proses') || str_contains($s, 'ujipetik') || str_contains($s, 'diproses')) {
                                     $cls = 'badge-proses'; $dot = '#d97706';
-                                } elseif (str_contains($s, 'validasi') || str_contains($s, 'menunggu')) {
+                                } elseif (str_contains($s, 'pengajuan') || str_contains($s, 'validasi') || str_contains($s, 'verifikasi') || str_contains($s, 'menunggu') || str_contains($s, 'pending')) {
                                     $cls = 'badge-validasi'; $dot = '#2563eb';
-                                } elseif (str_contains($s, 'perbaikan') || str_contains($s, 'perlu')) {
-                                    $cls = 'badge-perbaikan'; $dot = '#e11d48';
                                 } elseif (str_contains($s, 'jadwal')) {
                                     $cls = 'badge-dijadwalkan'; $dot = '#7c3aed';
                                 } else {

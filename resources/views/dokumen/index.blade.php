@@ -809,15 +809,16 @@
 
                             $fileSize = 0;
 
-                            if (
-                                $dokumen->path_file &&
-                                Storage::disk('public')
-                                    ->exists($dokumen->path_file)
-                            ) {
+                            if ($dokumen->path_file) {
+                                try {
+                                    if (Storage::disk('supabase')->exists($dokumen->path_file)) {
+                                        $fileSize = Storage::disk('supabase')->size($dokumen->path_file);
+                                    }
+                                } catch (\Throwable $e) {}
 
-                                $fileSize = Storage::disk('public')
-                                    ->size($dokumen->path_file);
-
+                                if (!$fileSize && Storage::disk('public')->exists($dokumen->path_file)) {
+                                    $fileSize = Storage::disk('public')->size($dokumen->path_file);
+                                }
                             }
 
                         @endphp
