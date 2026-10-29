@@ -64,7 +64,7 @@
 
 
         <!-- Stat Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
 
             <!-- Card 1: Total OPD -->
             <div
@@ -119,6 +119,8 @@
                     <h3 class="text-2xl font-bold text-[#1b365d]">
                         {{ $totalAjuan }}</h3>
 
+                    <span class="text-[11px] text-slate-400 font-medium mt-1 block">Masuk ke sistem</span>
+
                 </div>
 
                 <div
@@ -141,7 +143,79 @@
             </div>
 
 
-            <!-- Card 4: Selesai -->
+            <!-- Card 3: Dalam Pengujian -->
+            <div
+                 class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-xs font-medium text-slate-500 mb-1">Dalam
+                        Pengujian</p>
+
+                    <h3 class="text-2xl font-bold text-amber-600">
+                        {{ $dalamPengujianCount }}</h3>
+
+                    <span class="text-[11px] text-amber-600 font-medium mt-1 block">Sedang proses uji</span>
+
+                </div>
+
+                <div
+                     class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+
+                    <svg class="w-6 h-6"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                    </svg>
+
+                </div>
+
+            </div>
+
+
+            <!-- Card 4: Menunggu Perbaikan -->
+            <div
+                 class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-xs font-medium text-slate-500 mb-1">Menunggu
+                        Perbaikan</p>
+
+                    <h3 class="text-2xl font-bold text-orange-600">
+                        {{ $menungguPerbaikanCount }}</h3>
+
+                    <span class="text-[11px] text-orange-600 font-medium mt-1 block">Tindak lanjut OPD</span>
+
+                </div>
+
+                <div
+                     class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
+
+                    <svg class="w-6 h-6"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+
+                    </svg>
+
+                </div>
+
+            </div>
+
+
+            <!-- Card 5: Selesai -->
             <div
                  class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
 
@@ -252,9 +326,9 @@
                         Diajukan ({{ $diajukanCount }})
                     </a>
 
-                    <a href="{{ route('admin.dashboard', ['status' => 'dalam_pengajuan']) }}"
-                       class="px-3 py-1.5 {{ in_array(request('status'), ['dalam_pengajuan', 'ujipetik', 'proses']) ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-medium rounded-lg shrink-0 transition-colors">
-                        Dalam Pengajuan ({{ $dalamPengajuanCount }})
+                    <a href="{{ route('admin.dashboard', ['status' => 'dalam_pengujian']) }}"
+                       class="px-3 py-1.5 {{ in_array(request('status'), ['dalam_pengujian', 'dalam_pengajuan', 'ujipetik', 'proses']) ? 'bg-[#1b365d] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }} text-xs font-medium rounded-lg shrink-0 transition-colors">
+                        Dalam Pengujian ({{ $dalamPengujianCount }})
                     </a>
 
                     <a href="{{ route('admin.dashboard', ['status' => 'menunggu_perbaikan']) }}"
@@ -342,7 +416,7 @@
                                                 <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
                                                 {{ $ajuan->status }}
                                             </span>
-                                        @elseif (str_contains($st, 'dalam pengajuan') || str_contains($st, 'proses') || str_contains($st, 'ujipetik') || str_contains($st, 'diproses'))
+                                        @elseif (str_contains($st, 'dalam pengujian') || str_contains($st, 'dalam pengajuan') || str_contains($st, 'proses') || str_contains($st, 'ujipetik') || str_contains($st, 'diproses'))
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                                                 {{ $ajuan->status }}

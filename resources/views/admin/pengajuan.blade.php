@@ -557,7 +557,7 @@
                                     $cls = 'badge-selesai'; $dot = '#059669';
                                 } elseif (str_contains($s, 'perbaikan') || str_contains($s, 'remediasi')) {
                                     $cls = 'badge-perbaikan'; $dot = '#ea580c';
-                                } elseif (str_contains($s, 'dalam pengajuan') || str_contains($s, 'proses') || str_contains($s, 'ujipetik') || str_contains($s, 'diproses')) {
+                                } elseif (str_contains($s, 'dalam pengujian') || str_contains($s, 'dalam pengajuan') || str_contains($s, 'proses') || str_contains($s, 'ujipetik') || str_contains($s, 'diproses')) {
                                     $cls = 'badge-proses'; $dot = '#d97706';
                                 } elseif (str_contains($s, 'diajukan') || str_contains($s, 'pengajuan') || str_contains($s, 'validasi') || str_contains($s, 'verifikasi') || str_contains($s, 'menunggu') || str_contains($s, 'pending')) {
                                     $cls = 'badge-validasi'; $dot = '#2563eb';

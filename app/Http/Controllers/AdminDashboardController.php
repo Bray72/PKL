@@ -27,8 +27,8 @@ class AdminDashboardController extends Controller
             $status = strtolower($request->status);
             if ($status === 'diajukan') {
                 $query->whereIn('status', ['diajukan', 'Diajukan', 'Pengajuan', 'pengajuan', 'pending', 'menunggu', 'Perlu Verifikasi']);
-            } elseif (in_array($status, ['dalam_pengajuan', 'dalam pengajuan', 'proses', 'ujipetik'])) {
-                $query->whereIn('status', ['dalam pengajuan', 'Dalam Pengajuan', 'Proses Pengujian', 'Sedang Diproses', 'diproses', 'ujipetik', 'proses ujipetik']);
+            } elseif (in_array($status, ['dalam_pengujian', 'dalam pengujian', 'dalam_pengajuan', 'dalam pengajuan', 'proses', 'ujipetik'])) {
+                $query->whereIn('status', ['dalam pengujian', 'Dalam Pengujian', 'dalam pengajuan', 'Dalam Pengajuan', 'Proses Pengujian', 'Sedang Diproses', 'diproses', 'ujipetik', 'proses ujipetik']);
             } elseif (in_array($status, ['menunggu_perbaikan', 'menunggu perbaikan', 'perbaikan'])) {
                 $query->whereIn('status', ['menunggu perbaikan', 'Menunggu Perbaikan', 'Perlu Perbaikan', 'Perbaikan', 'perbaikan', 'remediasi']);
             } elseif ($status === 'selesai') {
@@ -46,12 +46,13 @@ class AdminDashboardController extends Controller
 
         // Hitung total untuk masing-masing status
         $diajukanCount = Ajuan::whereIn('status', ['diajukan', 'Diajukan', 'Pengajuan', 'pengajuan', 'pending', 'menunggu', 'Perlu Verifikasi'])->count();
-        $dalamPengajuanCount = Ajuan::whereIn('status', ['dalam pengajuan', 'Dalam Pengajuan', 'Proses Pengujian', 'Sedang Diproses', 'diproses', 'ujipetik', 'proses ujipetik'])->count();
+        $dalamPengujianCount = Ajuan::whereIn('status', ['dalam pengujian', 'Dalam Pengujian', 'dalam pengajuan', 'Dalam Pengajuan', 'Proses Pengujian', 'Sedang Diproses', 'diproses', 'ujipetik', 'proses ujipetik'])->count();
+        $dalamPengajuanCount = $dalamPengujianCount;
         $menungguPerbaikanCount = Ajuan::whereIn('status', ['menunggu perbaikan', 'Menunggu Perbaikan', 'Perlu Perbaikan', 'Perbaikan', 'perbaikan', 'remediasi'])->count();
         $selesaiCount = Ajuan::whereIn('status', ['selesai', 'Selesai'])->count();
 
         // Backward compatibility jika ada view yang memakai $prosesCount
-        $prosesCount = $dalamPengajuanCount;
+        $prosesCount = $dalamPengujianCount;
 
         // Quick Verification Tasks & Activity Log
         $pendingVerifikasi = Ajuan::with('user')
@@ -70,6 +71,7 @@ class AdminDashboardController extends Controller
             'totalopd',
             'totalAjuan',
             'diajukanCount',
+            'dalamPengujianCount',
             'dalamPengajuanCount',
             'menungguPerbaikanCount',
             'selesaiCount',
