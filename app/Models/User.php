@@ -46,6 +46,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Ajuan::class);
     }
+
+    public function temuans()
+    {
+        return $this->hasMany(Temuan::class, 'created_by');
+    }
     /**
      * Get the attributes that should be cast.
      *

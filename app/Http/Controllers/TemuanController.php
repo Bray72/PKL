@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Temuan;
 use App\Models\Ajuan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TemuanController extends Controller
 {
@@ -13,14 +14,19 @@ class TemuanController extends Controller
      */
     public function index(Request $request)
     {
-        // Ambil semua temuan beserta data pengajuan
+        $admin = $request->user();
+
+        // Ambil temuan sesuai hak akses admin (role 1 melihat semua, role 2 & 3 melihat buatannya sendiri)
         $temuans = Temuan::with('ajuan')
+            ->visibleToAdmin($admin)
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        // Ambil data pengajuan untuk dropdown
-        $ajuans = Ajuan::latest()->get();
+        // Ambil data pengajuan untuk dropdown sesuai hak akses admin
+        $ajuans = Ajuan::visibleToAdmin($admin)
+            ->latest()
+            ->get();
 
         // Apakah form tambah temuan ditampilkan?
         $showForm = $request->boolean('form');
@@ -37,6 +43,8 @@ class TemuanController extends Controller
      */
     public function store(Request $request)
     {
+        $admin = $request->user();
+
         $validated = $request->validate([
             'ajuan_id' => 'required|exists:ajuans,id',
             'judul' => 'required|string|max:255',
@@ -45,8 +53,20 @@ class TemuanController extends Controller
             'rekomendasi' => 'nullable|string',
         ]);
 
+        // Pastikan admin hanya bisa membuat temuan pada ajuan yang dia miliki hak aksesnya
+        if ((int) $admin->role_id !== 1) {
+            $isAjuanVisible = Ajuan::where('id', $validated['ajuan_id'])
+                ->where('created_by', $admin->id)
+                ->exists();
+
+            if (!$isAjuanVisible) {
+                abort(403, 'Anda tidak memiliki hak akses untuk menambahkan temuan pada pengajuan ini.');
+            }
+        }
+
         Temuan::create([
             'ajuan_id' => $validated['ajuan_id'],
+            'created_by' => Auth::id(),
             'judul' => $validated['judul'],
             'deskripsi' => $validated['deskripsi'] ?? null,
             'severity' => $validated['severity'],
@@ -62,9 +82,16 @@ class TemuanController extends Controller
     /**
      * Tampilkan halaman/form edit
      */
-    public function edit(Temuan $temuan)
+    public function edit(Request $request, Temuan $temuan)
     {
-        $ajuans = Ajuan::latest()->get();
+        $admin = $request->user();
+        if ((int) $admin->role_id !== 1 && $temuan->created_by !== $admin->id) {
+            abort(403, 'Anda tidak memiliki hak akses untuk mengedit temuan ini.');
+        }
+
+        $ajuans = Ajuan::visibleToAdmin($admin)
+            ->latest()
+            ->get();
 
         return view('admin.temuan-edit', compact(
             'temuan',
@@ -77,6 +104,11 @@ class TemuanController extends Controller
      */
     public function update(Request $request, Temuan $temuan)
     {
+        $admin = $request->user();
+        if ((int) $admin->role_id !== 1 && $temuan->created_by !== $admin->id) {
+            abort(403, 'Anda tidak memiliki hak akses untuk memperbarui temuan ini.');
+        }
+
         $validated = $request->validate([
             'ajuan_id' => 'required|exists:ajuans,id',
             'judul' => 'required|string|max:255',
@@ -85,6 +117,17 @@ class TemuanController extends Controller
             'rekomendasi' => 'nullable|string',
             'status' => 'required|string|max:255',
         ]);
+
+        // Pastikan ajuan baru yang dipilih juga merupakan ajuan milik admin jika bukan superadmin
+        if ((int) $admin->role_id !== 1) {
+            $isAjuanVisible = Ajuan::where('id', $validated['ajuan_id'])
+                ->where('created_by', $admin->id)
+                ->exists();
+
+            if (!$isAjuanVisible) {
+                abort(403, 'Anda tidak memiliki hak akses untuk memindahkan temuan ke pengajuan ini.');
+            }
+        }
 
         $temuan->update([
             'ajuan_id' => $validated['ajuan_id'],
@@ -103,8 +146,13 @@ class TemuanController extends Controller
     /**
      * Hapus temuan
      */
-    public function destroy(Temuan $temuan)
+    public function destroy(Request $request, Temuan $temuan)
     {
+        $admin = $request->user();
+        if ((int) $admin->role_id !== 1 && $temuan->created_by !== $admin->id) {
+            abort(403, 'Anda tidak memiliki hak akses untuk menghapus temuan ini.');
+        }
+
         $temuan->delete();
 
         return redirect()
