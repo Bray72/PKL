@@ -39,7 +39,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-Route::middleware(['auth', 'role:2'])->group(function () {
+Route::middleware(['auth', 'role:4'])->group(function () {
 
     Route::get('/opd/dashboard', [OpdDashboardController::class, 'index'])
         ->name('opd.dashboard');
@@ -51,7 +51,7 @@ Route::middleware(['auth', 'role:2'])->group(function () {
         ->name('opd.remediasi.update');
 });
 
-Route::middleware(['auth', 'role:1'])->group(function () {
+Route::middleware(['auth', 'role:1,2,3'])->group(function () {
 
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
         ->name('admin.dashboard');

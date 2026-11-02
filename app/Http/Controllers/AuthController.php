@@ -44,7 +44,8 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
-            'role_id' => 2,
+            // Registrasi publik selalu membuat akun OPD.
+            'role_id' => 4,
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
@@ -88,11 +89,11 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            if (Auth::user()->role_id == 1) {
+            if (in_array((int) Auth::user()->role_id, [1, 2, 3], true)) {
                 return redirect()->route('admin.dashboard');
             }
 
-            if (Auth::user()->role_id == 2) {
+            if (Auth::user()->role_id == 4) {
                 return redirect()->route('opd.dashboard');
             }
 

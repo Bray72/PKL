@@ -14,7 +14,7 @@ class PengajuanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Ajuan::with('user');
+        $query = Ajuan::with('user')->visibleToAdmin($request->user());
         $users = User::orderBy('opd')->get();
 
         // Filter pencarian
@@ -38,8 +38,9 @@ class PengajuanController extends Controller
         $ajuans = $query->latest()->paginate(10)->withQueryString();
 
         // Statistik sederhana
-        $totalAjuan   = Ajuan::count();
-        $selesaiCount = Ajuan::whereIn('status', ['selesai', 'Selesai'])->count();
+        $visibleAjuans = Ajuan::query()->visibleToAdmin($request->user());
+        $totalAjuan   = (clone $visibleAjuans)->count();
+        $selesaiCount = (clone $visibleAjuans)->whereIn('status', ['selesai', 'Selesai'])->count();
 
         // Apakah form tambah pengajuan tampil? (toggled via query string ?form=1)
         $showForm = $request->boolean('form');
@@ -89,7 +90,8 @@ class PengajuanController extends Controller
         $nomorAjuan = sprintf('ITSA-%d-%03d', $year, $nextNumber);
 
         Ajuan::create([
-            'user_id' => $validated['user_id'],
+            'user_id'            => $validated['user_id'],
+            'created_by'         => Auth::id(),
             'nomor_ajuan'        => $nomorAjuan,
             'nama_aplikasi'      => $validated['nama_aplikasi'],
             'tujuan_assessment'  => $validated['tujuan_assessment'],
@@ -104,8 +106,13 @@ class PengajuanController extends Controller
             ->with('success', "Pengajuan {$nomorAjuan} berhasil ditambahkan!");
     }
 
-    public function edit(Ajuan $ajuan)
+    public function edit(Request $request, Ajuan $ajuan)
     {
+        $user = $request->user();
+        if ((int) $user->role_id !== 1 && $ajuan->created_by !== $user->id) {
+            abort(403, 'Anda tidak memiliki hak akses untuk mengedit pengajuan ini.');
+        }
+
         $users = User::orderBy('opd')->get();
 
         return view('admin.pengajuan-edit', compact(
@@ -116,6 +123,11 @@ class PengajuanController extends Controller
 
     public function update(Request $request, Ajuan $ajuan)
     {
+        $user = $request->user();
+        if ((int) $user->role_id !== 1 && $ajuan->created_by !== $user->id) {
+            abort(403, 'Anda tidak memiliki hak akses untuk mengubah pengajuan ini.');
+        }
+
         $validated = $request->validate([
             'user_id'            => 'required|exists:users,id',
             'nama_aplikasi'      => 'required|string|max:255',
@@ -139,8 +151,13 @@ class PengajuanController extends Controller
             ->with('success', "Pengajuan {$ajuan->nomor_ajuan} berhasil diperbarui!");
     }
 
-    public function destroy(Ajuan $ajuan) 
+    public function destroy(Request $request, Ajuan $ajuan) 
     { 
+        $user = $request->user();
+        if ((int) $user->role_id !== 1 && $ajuan->created_by !== $user->id) {
+            abort(403, 'Anda tidak memiliki hak akses untuk menghapus pengajuan ini.');
+        }
+
         $nomorAjuan = $ajuan->nomor_ajuan; 
         
         $ajuan->delete(); 

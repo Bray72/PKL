@@ -12,7 +12,8 @@ class AdminDashboardController extends Controller
     public function index(Request $request)
     {
         // Query all ajuans with user relation
-        $query = Ajuan::with('user');
+        $admin = $request->user();
+        $query = Ajuan::with('user')->visibleToAdmin($admin);
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -41,27 +42,29 @@ class AdminDashboardController extends Controller
         $ajuans = $query->latest()->get();
 
         // Statistics
-        $totalopd = User::where('role_id', 2)->count();
-        $totalAjuan = Ajuan::count();
+        $totalopd = User::where('role_id', 4)->count();
+        $visibleAjuans = Ajuan::query()->visibleToAdmin($admin);
+        $totalAjuan = (clone $visibleAjuans)->count();
 
         // Hitung total untuk masing-masing status
-        $diajukanCount = Ajuan::whereIn('status', ['diajukan', 'Diajukan', 'Pengajuan', 'pengajuan', 'pending', 'menunggu', 'Perlu Verifikasi'])->count();
-        $dalamPengujianCount = Ajuan::whereIn('status', ['dalam pengujian', 'Dalam Pengujian', 'dalam pengajuan', 'Dalam Pengajuan', 'Proses Pengujian', 'Sedang Diproses', 'diproses', 'ujipetik', 'proses ujipetik'])->count();
+        $diajukanCount = (clone $visibleAjuans)->whereIn('status', ['diajukan', 'Diajukan', 'Pengajuan', 'pengajuan', 'pending', 'menunggu', 'Perlu Verifikasi'])->count();
+        $dalamPengujianCount = (clone $visibleAjuans)->whereIn('status', ['dalam pengujian', 'Dalam Pengujian', 'dalam pengajuan', 'Dalam Pengajuan', 'Proses Pengujian', 'Sedang Diproses', 'diproses', 'ujipetik', 'proses ujipetik'])->count();
         $dalamPengajuanCount = $dalamPengujianCount;
-        $menungguPerbaikanCount = Ajuan::whereIn('status', ['menunggu perbaikan', 'Menunggu Perbaikan', 'Perlu Perbaikan', 'Perbaikan', 'perbaikan', 'remediasi'])->count();
-        $selesaiCount = Ajuan::whereIn('status', ['selesai', 'Selesai'])->count();
+        $menungguPerbaikanCount = (clone $visibleAjuans)->whereIn('status', ['menunggu perbaikan', 'Menunggu Perbaikan', 'Perlu Perbaikan', 'Perbaikan', 'perbaikan', 'remediasi'])->count();
+        $selesaiCount = (clone $visibleAjuans)->whereIn('status', ['selesai', 'Selesai'])->count();
 
         // Backward compatibility jika ada view yang memakai $prosesCount
         $prosesCount = $dalamPengujianCount;
 
         // Quick Verification Tasks & Activity Log
-        $pendingVerifikasi = Ajuan::with('user')
+        $pendingVerifikasi = Ajuan::with('user')->visibleToAdmin($admin)
             ->whereIn('status', ['diajukan', 'Diajukan', 'pending', 'menunggu', 'perlu_verifikasi', 'Perlu Verifikasi', 'Pengajuan'])
             ->latest()
             ->take(5)
             ->get();
 
         $recentTemuans = Temuan::with('ajuan.user')
+            ->whereHas('ajuan', fn ($query) => $query->visibleToAdmin($admin))
             ->latest()
             ->take(5)
             ->get();

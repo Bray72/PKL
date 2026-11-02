@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\User;
 use App\Models\Temuan;
 
 class Ajuan extends Model
@@ -16,6 +18,7 @@ class Ajuan extends Model
 
     protected $fillable = [
         'user_id',
+        'created_by',
         'nomor_ajuan',
         'nama_aplikasi',
         'tujuan_assessment',
@@ -47,5 +50,21 @@ class Ajuan extends Model
     public function dokumens(): HasMany
     {
         return $this->hasMany(Dokumen::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function scopeVisibleToAdmin(Builder $query, User $user): Builder
+    {
+        // Role 1 adalah Superadmin, dapat melihat semua pengajuan
+        if ((int) $user->role_id === 1) {
+            return $query;
+        }
+
+        // Role 2 & 3 (Admin) hanya bisa melihat pengajuan yang dibuat oleh dirinya sendiri
+        return $query->where('created_by', $user->id);
     }
 }
