@@ -30,8 +30,8 @@ class AdminDashboardController extends Controller
                 $query->whereIn('status', ['diajukan', 'Diajukan', 'Pengajuan', 'pengajuan', 'pending', 'menunggu', 'Perlu Verifikasi']);
             } elseif (in_array($status, ['dalam_pengujian', 'dalam pengujian', 'dalam_pengajuan', 'dalam pengajuan', 'proses', 'ujipetik'])) {
                 $query->whereIn('status', ['dalam pengujian', 'Dalam Pengujian', 'dalam pengajuan', 'Dalam Pengajuan', 'Proses Pengujian', 'Sedang Diproses', 'diproses', 'ujipetik', 'proses ujipetik']);
-            } elseif (in_array($status, ['menunggu_perbaikan', 'menunggu perbaikan', 'perbaikan'])) {
-                $query->whereIn('status', ['menunggu perbaikan', 'Menunggu Perbaikan', 'Perlu Perbaikan', 'Perbaikan', 'perbaikan', 'remediasi']);
+            } elseif (in_array($status, ['menunggu_perbaikan', 'menunggu perbaikan', 'dalam_perbaikan', 'dalam perbaikan', 'perbaikan'])) {
+                $query->whereIn('status', ['dalam perbaikan', 'Dalam Perbaikan', 'menunggu perbaikan', 'Menunggu Perbaikan', 'Perlu Perbaikan', 'Perbaikan', 'perbaikan', 'remediasi']);
             } elseif ($status === 'selesai') {
                 $query->whereIn('status', ['selesai', 'Selesai']);
             } else {
@@ -50,7 +50,7 @@ class AdminDashboardController extends Controller
         $diajukanCount = (clone $visibleAjuans)->whereIn('status', ['diajukan', 'Diajukan', 'Pengajuan', 'pengajuan', 'pending', 'menunggu', 'Perlu Verifikasi'])->count();
         $dalamPengujianCount = (clone $visibleAjuans)->whereIn('status', ['dalam pengujian', 'Dalam Pengujian', 'dalam pengajuan', 'Dalam Pengajuan', 'Proses Pengujian', 'Sedang Diproses', 'diproses', 'ujipetik', 'proses ujipetik'])->count();
         $dalamPengajuanCount = $dalamPengujianCount;
-        $menungguPerbaikanCount = (clone $visibleAjuans)->whereIn('status', ['menunggu perbaikan', 'Menunggu Perbaikan', 'Perlu Perbaikan', 'Perbaikan', 'perbaikan', 'remediasi'])->count();
+        $menungguPerbaikanCount = (clone $visibleAjuans)->whereIn('status', ['dalam perbaikan', 'Dalam Perbaikan', 'menunggu perbaikan', 'Menunggu Perbaikan', 'Perlu Perbaikan', 'Perbaikan', 'perbaikan', 'remediasi'])->count();
         $selesaiCount = (clone $visibleAjuans)->whereIn('status', ['selesai', 'Selesai'])->count();
 
         // Backward compatibility jika ada view yang memakai $prosesCount
