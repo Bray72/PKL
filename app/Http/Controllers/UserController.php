@@ -45,9 +45,8 @@ class UserController extends Controller
 
         // Statistik Kartu
         $totalUsers = User::count();
-        $activeUsers = User::whereNotNull('email_verified_at')->count();
-        $unverifiedUsers = User::whereNull('email_verified_at')->count();
         $adminCount = User::whereIn('role_id', [1, 2, 3])->count();
+        $opdCount = User::where('role_id', 4)->count();
 
         // Roles untuk dropdown
         $roles = Role::all();
@@ -58,9 +57,8 @@ class UserController extends Controller
         return view('admin.users', compact(
             'users',
             'totalUsers',
-            'activeUsers',
-            'unverifiedUsers',
             'adminCount',
+            'opdCount',
             'roles',
             'showForm'
         ));

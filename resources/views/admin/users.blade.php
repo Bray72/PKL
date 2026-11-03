@@ -46,13 +46,13 @@
     /* ===== STATS GRID ===== */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 16px;
         margin-bottom: 24px;
     }
     @media (max-width: 1024px) {
         .stats-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
     @media (max-width: 640px) {
@@ -454,7 +454,6 @@
     {{-- Page Header --}}
     <div class="page-header-row">
         <div>
-            <div class="page-kicker">Management Portal</div>
             <h1 class="page-title">Kelola Akun</h1>
             <p class="page-subtitle">Kelola akses pengguna OPD dan administrator pada Portal ITSA</p>
         </div>
@@ -484,35 +483,7 @@
             </div>
         </div>
 
-        {{-- Card 2: Akun Aktif --}}
-        <div class="stat-card">
-            <div class="stat-icon stat-icon-green">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-            <div class="stat-body">
-                <div class="stat-label">Akun Aktif</div>
-                <div class="stat-val">{{ $activeUsers }}</div>
-                <div class="stat-sub">{{ $totalUsers > 0 ? round(($activeUsers / $totalUsers) * 100) : 0 }}% dari total akun</div>
-            </div>
-        </div>
-
-        {{-- Card 3: Perlu Verifikasi --}}
-        <div class="stat-card">
-            <div class="stat-icon stat-icon-amber">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-            </div>
-            <div class="stat-body">
-                <div class="stat-label">Perlu Verifikasi</div>
-                <div class="stat-val">{{ $unverifiedUsers }}</div>
-                <div class="stat-sub">Menunggu persetujuan...</div>
-            </div>
-        </div>
-
-        {{-- Card 4: Administrator --}}
+        {{-- Card 2: Administrator --}}
         <div class="stat-card">
             <div class="stat-icon stat-icon-purple">
                 <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -522,7 +493,21 @@
             <div class="stat-body">
                 <div class="stat-label">Administrator</div>
                 <div class="stat-val">{{ $adminCount }}</div>
-                <div class="stat-sub">Memiliki akses tim ITSA</div>
+                <div class="stat-sub">Superadmin & Tim ITSA</div>
+            </div>
+        </div>
+
+        {{-- Card 3: OPD --}}
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-green">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m3 0h1m-1-4h.01M9 16h.01M9 12h.01M9 8h.01M15 16h.01M15 12h.01M15 8h.01"/>
+                </svg>
+            </div>
+            <div class="stat-body">
+                <div class="stat-label">Pengguna OPD</div>
+                <div class="stat-val">{{ $opdCount }}</div>
+                <div class="stat-sub">Akun instansi daerah</div>
             </div>
         </div>
     </div>
@@ -550,13 +535,6 @@
                 @endforeach
             </select>
 
-            {{-- Filter Status --}}
-            <select name="status" class="filter-select" onchange="this.form.submit()">
-                <option value="">Semua Status</option>
-                <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="unverified" {{ request('status') == 'unverified' ? 'selected' : '' }}>Perlu Verifikasi</option>
-            </select>
-
             <span class="count-badge">{{ $users->total() }} akun ditemukan</span>
         </form>
 
@@ -568,7 +546,6 @@
                         <th>Pengguna</th>
                         <th>Instansi / OPD</th>
                         <th>Peran</th>
-                        <th>Status</th>
                         <th>Aktivitas Terakhir</th>
                         <th style="text-align: right;">Aksi</th>
                     </tr>
@@ -602,19 +579,6 @@
                                 <span class="role-badge {{ $roleClass }}">
                                     {{ ucfirst($user->role->name ?? 'User') }}
                                 </span>
-                            </td>
-                            <td>
-                                @if($user->email_verified_at)
-                                    <span class="status-pill status-pill-active">
-                                        <span class="dot"></span>
-                                        Aktif
-                                    </span>
-                                @else
-                                    <span class="status-pill status-pill-unverified">
-                                        <span class="dot"></span>
-                                        Perlu Verifikasi
-                                    </span>
-                                @endif
                             </td>
                             <td style="color: #64748b; font-size: 12px;">
                                 {{ $user->updated_at ? $user->updated_at->diffForHumans() : '-' }}
@@ -707,13 +671,6 @@
                         <label>Konfirmasi Password <span class="req">*</span></label>
                         <input type="password" name="password_confirmation" class="form-input" required minlength="8" placeholder="Ulangi password">
                     </div>
-                </div>
-
-                <div class="form-group" style="margin-top: 10px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="checkbox" name="is_verified" value="1" checked style="width: 16px; height: 16px;">
-                        <span>Verifikasi Akun Sekarang (Status Aktif)</span>
-                    </label>
                 </div>
             </div>
             <div class="modal-footer">
