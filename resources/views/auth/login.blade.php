@@ -3,260 +3,408 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Login - Portal ITSA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk ke Portal ITSA - Diskominfo Prov. Jawa Timur</title>
 
     <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        .split-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* ===== LEFT HERO SECTION ===== */
+        .hero-section {
+            flex: 1.15;
+            position: relative;
+            background-image: url('{{ asset('gedungkominfo.webp') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 56px 48px;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Overlay Gelap Elegan */
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 30, 54, 0.45) 0%, rgba(11, 23, 42, 0.88) 75%, rgba(9, 18, 34, 0.96) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 540px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .hero-badge-dot {
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .hero-title {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin: 0;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== RIGHT FORM SECTION ===== */
+        .form-section {
+            flex: 0.95;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 32px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .welcome-kicker {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .form-title {
+            font-size: 30px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.02em;
+        }
+
+        .form-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin: 0 0 28px 0;
+        }
+
+        /* Segmented Tabs */
+        .segmented-tabs {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 11px;
+            font-size: 13.5px;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            transition: all .2s ease;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: #0f172a;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .forgot-link {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #2563eb;
+            text-decoration: none;
+            transition: color .15s;
+        }
+
+        .forgot-link:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-size: 14px;
+            color: #0f172a;
+            background: #ffffff;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        .input-field:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .input-field::placeholder {
+            color: #94a3b8;
+        }
+
+        /* Checkbox */
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-checkbox {
+            width: 17px;
+            height: 17px;
+            border-radius: 5px;
+            border: 1px solid #cbd5e1;
+            accent-color: #1b365d;
+            cursor: pointer;
+        }
+
+        .remember-label {
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #1b365d;
+            color: #ffffff;
+            font-size: 14.5px;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all .2s;
+            box-shadow: 0 4px 12px rgba(27, 54, 93, 0.2);
+        }
+
+        .btn-submit:hover {
+            background: #132742;
+            box-shadow: 0 6px 16px rgba(27, 54, 93, 0.28);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        /* Register footer */
+        .register-footer {
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 24px;
+        }
+
+        .register-link {
+            font-weight: 700;
+            color: #1b365d;
+            text-decoration: none;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .split-layout {
+                flex-direction: column;
+            }
+            .hero-section {
+                flex: none;
+                min-height: 260px;
+                padding: 36px 24px;
+            }
+            .hero-title {
+                font-size: 26px;
+            }
+            .form-section {
+                flex: none;
+                min-height: auto;
+                padding: 40px 20px;
+            }
         }
     </style>
-
 </head>
 
-<body
-      class="bg-[#ebf1f6] min-h-screen flex flex-col justify-center items-center py-10 px-4 antialiased selection:bg-[#1b365d] selection:text-white">
+<body>
 
+    <div class="split-layout">
 
-    <!-- Top Logo & Header -->
-    <div class="flex flex-col items-center mb-6 text-center">
-
-        <!-- Logo Icon -->
-        <img src="https://static.diginusantara.com/2025/02/15/logo-kominfo-jatim-Zpmey.png"
-             alt="Logo Diskominfo Jatim"
-             class="h-16 w-auto object-contain mb-4">
-
-
-        <!-- Header Text -->
-        <h1
-            class="text-2xl md:text-[28px] font-bold text-[#1b365d] tracking-tight mb-1">
-
-            Portal ITSA
-
-        </h1>
-
-        <p class="text-slate-500 text-sm md:text-base font-normal">
-
-            Pemerintah Provinsi Jawa Timur
-
-        </p>
-
-    </div>
-
-
-    <!-- Main Card Container -->
-    <div
-         class="w-full max-w-[450px] bg-white rounded-[24px] shadow-[0_10px_35px_rgba(0,0,0,0.03)] border border-slate-100 p-7 md:p-9">
-
-
-        <!-- Card Title -->
-        <h2 class="text-center text-xl font-bold text-[#1b365d] mb-5">
-
-            Masuk ke Akun
-
-        </h2>
-
-
-        <!-- Role Segmented Control (Tabs) -->
-        <!-- <div class="bg-[#f1f5f9] p-1.5 rounded-2xl flex mb-6">
-
-            <button type="button"
-                    id="tab-opd"
-                    onclick="switchTab('opd')"
-                    class="flex-1 py-2.5 rounded-xl text-sm font-bold text-center transition-all bg-white text-[#1b365d] shadow-sm cursor-pointer">
-
-                OPD
-
-            </button>
-
-            <button type="button"
-                    id="tab-admin"
-                    onclick="switchTab('admin')"
-                    class="flex-1 py-2.5 rounded-xl text-sm font-medium text-center transition-all text-slate-500 hover:text-slate-700 cursor-pointer">
-
-                Admin ITSA
-
-            </button>
-
-        </div> -->
-
-
-        <!-- Success Notification -->
-        @if (session('success'))
-
-            <div
-                 class="mb-5 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
-
-                {{ session('success') }}
-
+        {{-- LEFT COLUMN: Hero Gedung Kominfo --}}
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Menjaga keamanan layanan digital Jawa Timur
+                </h1>
             </div>
-
-        @endif
-
-
-        <!-- Error Notification -->
-        @if ($errors->any())
-
-            <div
-                 class="mb-5 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm">
-
-                <div class="font-semibold mb-1">Terjadi kesalahan:</div>
-
-                <ul class="list-disc list-inside space-y-1 text-xs">
-
-                    @foreach ($errors->all() as $error)
-
-                        <li>{{ $error }}</li>
-
-                    @endforeach
-
-                </ul>
-
-            </div>
-
-        @endif
-
-
-        <form method="POST"
-              action="{{ route('login.process') }}"
-              class="space-y-4">
-
-            @csrf
-
-
-            <!-- Email -->
-            <div>
-
-                <label for="email"
-                       class="block text-xs md:text-sm font-semibold text-[#1b365d] mb-1.5">
-
-                    Email
-
-                </label>
-
-                <input type="email"
-                       id="email"
-                       name="email"
-                       value="{{ old('email') }}"
-                       placeholder="opd@jatimprov.go.id"
-                       required
-                       class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1b365d]/20 focus:border-[#1b365d] transition-all">
-
-            </div>
-
-
-            <!-- Password -->
-            <div>
-
-                <label for="password"
-                       class="block text-xs md:text-sm font-semibold text-[#1b365d] mb-1.5">
-
-                    Password
-
-                </label>
-
-                <input type="password"
-                       id="password"
-                       name="password"
-                       placeholder="••••••••"
-                       required
-                       class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1b365d]/20 focus:border-[#1b365d] transition-all">
-
-            </div>
-
-
-            <!-- Submit Button -->
-            <div class="pt-2">
-
-                <button type="submit"
-                        class="w-full py-3.5 px-4 bg-[#1b365d] hover:bg-[#142948] active:scale-[0.99] text-white font-semibold rounded-xl text-sm md:text-base shadow-sm transition-all duration-200 cursor-pointer">
-
-                    Masuk
-
-                </button>
-
-            </div>
-
-        </form>
-
-
-        <!-- Bottom Link -->
-        <div class="text-center text-sm text-slate-500 mt-6">
-
-            Belum punya akun?
-
-            <a href="{{ route('register') }}"
-               class="font-bold text-[#1b365d] hover:underline">
-
-                Daftar di sini
-
-            </a>
-
         </div>
 
+        {{-- RIGHT COLUMN: Login Form --}}
+        <div class="form-section">
+            <div class="form-container">
+
+                <div class="welcome-kicker">SELAMAT DATANG</div>
+                <h2 class="form-title">Masuk ke Portal ITSA</h2>
+                <p class="form-subtitle">Gunakan akun instansi Anda untuk melanjutkan.</p>
+
+                {{-- Alert Messages --}}
+                @if (session('success'))
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; font-weight: 600;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div style="background: #fef2f2; border: 1px solid #fecdd3; color: #991b1b; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 13px;">
+                        <ul style="margin: 0; padding-left: 16px;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login.process') }}">
+                    @csrf
+
+                    {{-- NIP / Email Dinas --}}
+                    <div class="input-group">
+                        <label for="email" id="email-label" class="input-label" style="display: block; margin-bottom: 8px;">
+                            NIP / Email Dinas
+                        </label>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               value="{{ old('email') }}"
+                               placeholder="nama@opd.jatimprov.go.id"
+                               required
+                               autocomplete="email"
+                               class="input-field">
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="input-group">
+                        <div class="input-label-row">
+                            <label for="password" class="input-label">Password</label>
+                        </div>
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               placeholder="Masukkan password"
+                               required
+                               autocomplete="current-password"
+                               class="input-field">
+                    </div>
+
+                    {{-- Submit Button --}}
+                    <button type="submit" class="btn-submit">
+                        Masuk ke Portal
+                    </button>
+                </form>
+                
+            </div>
+        </div>
 
     </div>
-
-
-    <!-- Footer -->
-    <div class="text-center text-xs text-slate-400 mt-8 font-normal">
-
-        © 2026 Dinas Kominfo Prov. Jawa Timur
-
-    </div>
-
 
     <script>
-        function switchTab(role) {
-
+        function switchRole(role) {
             const tabOpd = document.getElementById('tab-opd');
-
             const tabAdmin = document.getElementById('tab-admin');
-
             const emailInput = document.getElementById('email');
 
-
             if (role === 'opd') {
-
-                tabOpd.className =
-                    'flex-1 py-2.5 rounded-xl text-sm font-bold text-center transition-all bg-white text-[#1b365d] shadow-sm cursor-pointer';
-
-                tabAdmin.className =
-                    'flex-1 py-2.5 rounded-xl text-sm font-medium text-center transition-all text-slate-500 hover:text-slate-700 cursor-pointer';
-
-                emailInput.placeholder = 'opd@jatimprov.go.id';
-
+                tabOpd.classList.add('active');
+                tabAdmin.classList.remove('active');
+                emailInput.placeholder = 'nama@opd.jatimprov.go.id';
             } else {
-
-                tabAdmin.className =
-                    'flex-1 py-2.5 rounded-xl text-sm font-bold text-center transition-all bg-white text-[#1b365d] shadow-sm cursor-pointer';
-
-                tabOpd.className =
-                    'flex-1 py-2.5 rounded-xl text-sm font-medium text-center transition-all text-slate-500 hover:text-slate-700 cursor-pointer';
-
+                tabAdmin.classList.add('active');
+                tabOpd.classList.remove('active');
                 emailInput.placeholder = 'admin@jatimprov.go.id';
-
             }
-
         }
     </script>
-
 
 </body>
 
