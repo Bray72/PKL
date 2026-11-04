@@ -413,7 +413,7 @@
 
             <form
                 method="POST"
-                action="{{ route('admin.temuan.store') }}"
+                action="{{ route('admin.pengajuan.store') }}"
             >
 
                 @csrf
@@ -596,7 +596,7 @@
                     </button>
 
                     <a
-                        href="{{ route('admin.temuan.index') }}"
+                        href="{{ route('admin.pengajuan.index') }}"
                         class="btn-secondary"
                     >
                         Batal
