@@ -14,7 +14,18 @@ class PengajuanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Ajuan::with(['user', 'temuans'])->visibleToAdmin($request->user());
+        $user = $request->user();
+
+        // Eager load temuans dengan filter hak akses created_by jika bukan superadmin
+        $query = Ajuan::with([
+            'user',
+            'temuans' => function ($q) use ($user) {
+                if ((int) $user->role_id !== 1) {
+                    $q->where('created_by', $user->id);
+                }
+            }
+        ])->visibleToAdmin($user);
+
         $users = User::orderBy('opd')->get();
 
         // Filter pencarian

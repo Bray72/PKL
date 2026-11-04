@@ -172,7 +172,7 @@
     .detail-action.secondary:hover { background:#f8fafc; }
     .detail-action.success { background:#0f766e; color:#fff; border:none; display:flex; align-items:center; justify-content:center; gap:6px; }
     .detail-action.success:hover { background:#0d655e; color:#fff; }
-    .temuan-pill { display:inline-flex; min-width:28px; height:28px; align-items:center; justify-content:center; border-radius:10px; background:#f1f5f9; color:#344766; font-weight:800; }
+    .temuan-pill { display:inline-flex; min-width:28px; height:28px; align-items:center; justify-content:center; border-radius:10px; background:#f1f5f9; color:#344766; font-weight:800; text-align:center; }
 
     /* Temuan Section in Detail */
     .detail-temuan-section {
@@ -198,10 +198,10 @@
     .badge-sev-rendah { background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; }
     @media(max-width:800px){ .detail-grid{grid-template-columns:1fr}.detail-actions{border-left:0;padding-left:0}.pengajuan-table{min-width:850px} }
 
-    .nomor-cell  { font-weight: 700; color: #1b365d; font-size: 11.5px; }
-    .opd-name    { font-weight: 700; color: #1e293b; font-size: 12.5px; }
-    .date-cell   { font-size: 12px; color: #475569; font-weight: 500; }
-    .app-name    { font-weight: 600; color: #334155; }
+    .nomor-cell  { font-weight: 700; color: #1b365d; font-size: 11.5px; text-align:center; }
+    .opd-name    { font-weight: 700; color: #1e293b; font-size: 12.5px; text-align:center; }
+    .date-cell   { font-size: 12px; color: #475569; font-weight: 500; text-align:center; }
+    .app-name    { font-weight: 600; color: #334155; text-align:center; }
 
     .detail-btn {
         background: none;
@@ -673,10 +673,17 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-                                                <a href="{{ route('admin.temuan.edit', $tmn) }}" style="font-size:12px; font-weight:700; color:#2563eb; text-decoration:none; padding:4px 8px; border-radius:6px; background:#eff6ff;">
+                                            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                <a href="{{ route('admin.temuan.edit', $tmn) }}" style="font-size:12px; font-weight:700; color:#2563eb; text-decoration:none; padding:5px 10px; border-radius:6px; background:#eff6ff; border:1px solid #bfdbfe; transition:.15s;">
                                                     Kelola
                                                 </a>
+                                                <form action="{{ route('admin.temuan.destroy', $tmn->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus temuan: {{ $tmn->judul }}?');" style="display:inline; margin:0;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" style="font-size:12px; font-weight:700; color:#dc2626; background:#fef2f2; border:1px solid #fecdd3; padding:5px 10px; border-radius:6px; cursor:pointer; transition:.15s;">
+                                                        Hapus
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     @empty
