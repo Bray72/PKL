@@ -629,7 +629,7 @@
                                 </div>
                                 <div class="detail-actions">
                                     <p class="detail-title">Aksi Pengajuan</p>
-                                    <a href="{{ route('admin.pengajuan.edit', $ajuan) }}" class="detail-action primary">Edit Pengajuan</a>
+                                    <a href="{{ route('admin.pengajuan.edit', $ajuan) }}" class="detail-action secondary">Edit Pengajuan</a>
                                     <form action="{{ route('admin.pengajuan.destroy', $ajuan->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengajuan {{ $ajuan->nomor_ajuan }}?');">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="detail-action secondary" style="color:#dc2626; cursor:pointer;">Hapus</button>
@@ -674,7 +674,7 @@
                                                 </div>
                                             </div>
                                             <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                                                <a href="{{ route('admin.temuan.edit', $tmn) }}" style="font-size:12px; font-weight:700; color:#2563eb; text-decoration:none; padding:5px 10px; border-radius:6px; background:#eff6ff; border:1px solid #bfdbfe; transition:.15s;">
+                                                <a href="{{ route('admin.temuan.edit', $tmn) }}" style="font-size:12px; font-weight:700; color:#008000; text-decoration:none; padding:5px 10px; border-radius:6px; background:#eff6ff; border:1px solid #bffec8; transition:.15s;">
                                                     Kelola
                                                 </a>
                                                 <form action="{{ route('admin.temuan.destroy', $tmn->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus temuan: {{ $tmn->judul }}?');" style="display:inline; margin:0;">

@@ -29,12 +29,14 @@ class TemuanController extends Controller
             ->get();
 
         // Apakah form tambah temuan ditampilkan?
-        $showForm = $request->boolean('form');
+        $showForm = true;
+        $selectedAjuanId = $request->integer('ajuan_id') ?: old('ajuan_id');
 
         return view('admin.temuan', compact(
             'temuans',
             'ajuans',
-            'showForm'
+            'showForm',
+            'selectedAjuanId'
         ));
     }
 

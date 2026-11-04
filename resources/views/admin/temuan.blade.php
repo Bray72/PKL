@@ -439,9 +439,9 @@
 
                             @foreach($ajuans as $ajuan)
 
-                                <option
+                            <option
                                     value="{{ $ajuan->id }}"
-                                    {{ old('ajuan_id') == $ajuan->id ? 'selected' : '' }}
+                                    {{ (string) ($selectedAjuanId ?? old('ajuan_id')) === (string) $ajuan->id ? 'selected' : '' }}
                                 >
                                     {{ $ajuan->nomor_ajuan }}
                                 </option>
@@ -611,6 +611,8 @@
     @endif
 
 
+    {{-- Daftar temuan disembunyikan; halaman ini khusus untuk input temuan. --}}
+    @if(false)
     {{-- TABLE --}}
     <div class="table-card">
 
@@ -780,6 +782,7 @@
         @endif
 
     </div>
+    @endif
 
 </div>
 
