@@ -389,7 +389,7 @@
                     Pengajuan ITSA
                 </a>
 
-                <a href="{{ route('admin.temuan.index') }}" 
+                <!-- <a href="{{ route('admin.temuan.index') }}" 
                 class="itsa-sidebar-link {{ request()->routeIs('admin.temuan.*') ? 'is-active' : '' }}">
                     <span class="itsa-sidebar-icon">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,9 +398,9 @@
                         </svg>
                     </span>
                     Kelola Temuan
-                </a>
+                </a> -->
 
-                <a href="{{ route('dokumen.index') }}"
+                <!-- <a href="{{ route('dokumen.index') }}"
                     class="itsa-sidebar-link {{ request()->routeIs('dokumen.*') ? 'is-active' : '' }}">
                         <span class="itsa-sidebar-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -419,7 +419,7 @@
                             </svg>
                         </span>
                         Upload Dokumen
-                    </a>
+                    </a> -->
 
                 @if((int) (auth()->user()->role_id ?? 0) === 1)
                     <a href="{{ Route::has('admin.users.index') ? route('admin.users.index') : '#' }}"

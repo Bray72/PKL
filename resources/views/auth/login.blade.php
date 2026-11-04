@@ -348,10 +348,10 @@
                 <form method="POST" action="{{ route('login.process') }}">
                     @csrf
 
-                    {{-- NIP / Email Dinas --}}
+                    {{-- Email Terdaftar --}}
                     <div class="input-group">
                         <label for="email" id="email-label" class="input-label" style="display: block; margin-bottom: 8px;">
-                            NIP / Email Dinas
+                            Email Terdaftar
                         </label>
                         <input type="email"
                                id="email"
