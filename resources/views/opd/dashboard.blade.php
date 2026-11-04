@@ -11,7 +11,7 @@
     </div>
 
     {{-- ===== Stat Cards ===== --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" style="margin-bottom: 28px;">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4" style="margin-bottom: 28px;">
 
         {{-- Card 1: Total Pengajuan --}}
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
@@ -28,12 +28,12 @@
             </div>
         </div>
 
-        {{-- Card 2: Pengajuan (menunggu / pending) --}}
+        {{-- Card 2: Diajukan (menunggu / pending) --}}
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-slate-500 mb-1">Pengajuan</p>
+                <p class="text-xs font-medium text-slate-500 mb-1">Diajukan</p>
                 <h3 class="text-2xl font-bold text-sky-600">
-                    {{ $pengajuanCount }}
+                    {{ $diajukanCount }}
                 </h3>
                 <span class="text-[11px] text-slate-400 font-medium mt-1 block">Menunggu diproses</span>
             </div>
@@ -60,7 +60,22 @@
             </div>
         </div>
 
-        {{-- Card 4: Selesai --}}
+        {{-- Card 4: Dalam Perbaikan --}}
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+            <div>
+                <p class="text-xs font-medium text-slate-500 mb-1">Dalam Perbaikan</p>
+                <h3 class="text-2xl font-bold text-orange-600">{{ $perbaikanCount }}</h3>
+                <span class="text-[11px] text-slate-400 font-medium mt-1 block">Tindak lanjut OPD</span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+        </div>
+
+        {{-- Card 5: Selesai --}}
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div>
                 <p class="text-xs font-medium text-slate-500 mb-1">Selesai</p>
@@ -107,8 +122,9 @@
                         onchange="this.form.submit()"
                         class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 focus:outline-none focus:ring-2 focus:border-[#16305a]">
                     <option value="">Semua Status</option>
-                    <option value="Pengajuan" {{ request('status') == 'Pengajuan' ? 'selected' : '' }}>Pengajuan</option>
+                    <option value="Diajukan" {{ in_array(request('status'), ['Diajukan', 'Pengajuan']) ? 'selected' : '' }}>Diajukan</option>
                     <option value="Proses Pengujian" {{ request('status') == 'Proses Pengujian' ? 'selected' : '' }}>Proses Pengujian</option>
+                    <option value="Dalam Perbaikan" {{ request('status') == 'Dalam Perbaikan' ? 'selected' : '' }}>Dalam Perbaikan</option>
                     <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                 </select>
             </form>

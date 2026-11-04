@@ -20,10 +20,19 @@ class OpdDashboardController extends Controller
             $query->where('nama_aplikasi', 'like', '%' . $request->search . '%');
         }
 
-        $statuses = ['Pengajuan', 'Proses Pengujian', 'Selesai'];
-
-        if ($request->filled('status') && in_array($request->status, $statuses, true)) {
-            $query->where('status', $request->status);
+        if ($request->filled('status')) {
+            $status = strtolower($request->status);
+            if (in_array($status, ['diajukan', 'pengajuan'])) {
+                $query->whereIn('status', ['Diajukan', 'diajukan', 'Pengajuan', 'pengajuan', 'pending', 'menunggu']);
+            } elseif (in_array($status, ['proses pengujian', 'proses', 'ujipetik'])) {
+                $query->whereIn('status', ['Proses Pengujian', 'proses pengujian', 'Sedang Diproses', 'diproses', 'ujipetik']);
+            } elseif ($status === 'dalam perbaikan') {
+                $query->whereIn('status', ['Dalam Perbaikan', 'dalam perbaikan', 'Perlu Perbaikan', 'remediasi']);
+            } elseif ($status === 'selesai') {
+                $query->whereIn('status', ['Selesai', 'selesai']);
+            } else {
+                $query->where('status', $request->status);
+            }
         }
 
         $ajuans = $query
@@ -38,16 +47,20 @@ class OpdDashboardController extends Controller
         // Statistics
         $totalAjuan = Ajuan::where('user_id', $userId)->count();
 
-        $pengajuanCount = Ajuan::where('user_id', $userId)
-            ->where('status', 'Pengajuan')
+        $diajukanCount = Ajuan::where('user_id', $userId)
+            ->whereIn('status', ['Diajukan', 'diajukan', 'Pengajuan', 'pengajuan', 'pending', 'menunggu'])
             ->count();
 
         $diprosesCount = Ajuan::where('user_id', $userId)
-            ->where('status', 'Proses Pengujian')
+            ->whereIn('status', ['Proses Pengujian', 'proses pengujian', 'Sedang Diproses', 'diproses', 'ujipetik'])
+            ->count();
+
+        $perbaikanCount = Ajuan::where('user_id', $userId)
+            ->whereIn('status', ['Dalam Perbaikan', 'dalam perbaikan', 'Perlu Perbaikan', 'remediasi'])
             ->count();
 
         $selesaiCount = Ajuan::where('user_id', $userId)
-            ->where('status', 'Selesai')
+            ->whereIn('status', ['Selesai', 'selesai'])
             ->count();
 
         $totalTemuan = Temuan::whereHas('ajuan', fn($q) => $q->where('user_id', $userId))->count();
@@ -55,8 +68,9 @@ class OpdDashboardController extends Controller
         return view('opd.dashboard', compact(
             'ajuans',
             'totalAjuan',
-            'pengajuanCount',
+            'diajukanCount',
             'diprosesCount',
+            'perbaikanCount',
             'selesaiCount',
             'totalTemuan'
         ));

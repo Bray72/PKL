@@ -14,7 +14,7 @@ class PengajuanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Ajuan::with('user')->visibleToAdmin($request->user());
+        $query = Ajuan::with(['user', 'temuans'])->visibleToAdmin($request->user());
         $users = User::orderBy('opd')->get();
 
         // Filter pencarian

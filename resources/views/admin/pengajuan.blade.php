@@ -156,6 +156,48 @@
     .pengajuan-table tbody tr:hover { background: #f8fafc; }
     .pengajuan-table td { padding: 13px 16px; color: #334155; vertical-align: middle; }
 
+    .pengajuan-table tbody tr.ajuan-row { cursor: pointer; }
+    .ajuan-detail { display:none; background:#fbfdff; border-bottom:1px solid #e2e8f0; }
+    .ajuan-detail.is-open { display:table-row; }
+    .detail-grid { display:grid; grid-template-columns:1.1fr 1fr .7fr; gap:28px; padding:24px 28px; }
+    .detail-title { margin:0 0 14px; color:#8da1bd; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+    .detail-label { color:#8da1bd; font-size:11px; display:block; margin-bottom:3px; }
+    .detail-value { color:#344766; font-size:13px; font-weight:700; margin-bottom:14px; }
+    .detail-copy { color:#607492; font-size:12.5px; line-height:1.65; margin:0 0 12px; }
+    .detail-actions { border-left:1px solid #e2e8f0; padding-left:28px; }
+    .detail-action { display:block; width:100%; text-align:center; box-sizing:border-box; padding:10px 12px; border-radius:10px; text-decoration:none; margin-bottom:10px; font-size:13px; font-weight:700; transition: .15s; }
+    .detail-action.primary { background:#16305a; color:#fff; }
+    .detail-action.primary:hover { background:#12243e; color:#fff; }
+    .detail-action.secondary { border:1px solid #dbe3ee; color:#475b78; background:#fff; }
+    .detail-action.secondary:hover { background:#f8fafc; }
+    .detail-action.success { background:#0f766e; color:#fff; border:none; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .detail-action.success:hover { background:#0d655e; color:#fff; }
+    .temuan-pill { display:inline-flex; min-width:28px; height:28px; align-items:center; justify-content:center; border-radius:10px; background:#f1f5f9; color:#344766; font-weight:800; }
+
+    /* Temuan Section in Detail */
+    .detail-temuan-section {
+        grid-column: 1 / -1;
+        border-top: 1px dashed #e2e8f0;
+        margin-top: 6px;
+        padding-top: 18px;
+    }
+    .temuan-item {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    .badge-sev-kritis { background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; }
+    .badge-sev-tinggi { background:#fff7ed; color:#ea580c; border:1px solid #fed7aa; }
+    .badge-sev-sedang { background:#fffbeb; color:#d97706; border:1px solid #fde68a; }
+    .badge-sev-rendah { background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; }
+    @media(max-width:800px){ .detail-grid{grid-template-columns:1fr}.detail-actions{border-left:0;padding-left:0}.pengajuan-table{min-width:850px} }
+
     .nomor-cell  { font-weight: 700; color: #1b365d; font-size: 11.5px; }
     .opd-name    { font-weight: 700; color: #1e293b; font-size: 12.5px; }
     .date-cell   { font-size: 12px; color: #475569; font-weight: 500; }
@@ -503,18 +545,18 @@
             <table class="pengajuan-table">
                 <thead>
                     <tr>
-                        <th>ID / Nomor</th>
+                        <th>ID</th>
                         <th>OPD</th>
                         <th>Aplikasi</th>
-                        <th>Tanggal Ajuan</th>
-                        <th>Tujuan Assessment</th>
+                        <th>Tanggal</th>
+                        <th>Temuan</th>
                         <th>Status</th>
-                        <th style="text-align:center;">Aksi</th>
+                        <th style="text-align:center;"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($ajuans as $ajuan)
-                    <tr>
+                    <tr class="ajuan-row" data-detail="detail-{{ $ajuan->id }}" tabindex="0">
                         {{-- Nomor Ajuan --}}
                         <td>
                             <span class="nomor-cell">{{ $ajuan->nomor_ajuan }}</span>
@@ -535,18 +577,14 @@
                         {{-- Tanggal Pengajuan --}}
                         <td>
                             <span class="date-cell">
-                                {{ $ajuan->tanggal_pengajuan
-                                    ? \Carbon\Carbon::parse($ajuan->tanggal_pengajuan)->format('d M Y')
-                                    : '-' }}
+                                @if($ajuan->tanggal_pengajuan)
+                                    <span style="display:block;">{{ $ajuan->tanggal_pengajuan->format('d M') }}</span>
+                                    <span style="display:block;">{{ $ajuan->tanggal_pengajuan->format('Y') }}</span>
+                                @else - @endif
                             </span>
                         </td>
-
-                        {{-- Tujuan Assessment (truncated) --}}
-                        <td style="max-width:220px;">
-                            <span style="font-size:12px; color:#475569; display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:220px;"
-                                  title="{{ $ajuan->tujuan_assessment }}">
-                                {{ $ajuan->tujuan_assessment }}
-                            </span>
+                        <td>
+                            <span class="temuan-pill">{{ $ajuan->temuans->count() }}</span>
                         </td>
 
                         {{-- Status --}}
@@ -572,46 +610,87 @@
                                 {{ $ajuan->status }}
                             </span>
                         </td>
-                        <td style="text-align:center;">
-                            <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                        <td style="text-align:center; color:#8da1bd; font-size:18px;">⌄</td>
+                    </tr>
+                    <tr id="detail-{{ $ajuan->id }}" class="ajuan-detail">
+                        <td colspan="8">
+                            <div class="detail-grid">
+                                <div>
+                                    <p class="detail-title">Informasi Aplikasi</p>
+                                    <span class="detail-label">Nama Aplikasi</span><div class="detail-value">{{ $ajuan->nama_aplikasi }}</div>
+                                    <span class="detail-label">Tujuan Assessment</span><p class="detail-copy">{{ $ajuan->tujuan_assessment ?: 'Belum dicantumkan.' }}</p>
+                                </div>
+                                <div>
+                                    <p class="detail-title">Profile & Catatan</p>
+                                    <p class="detail-copy"><strong>{{ $ajuan->user->name ?? '-' }}</strong> · {{ $ajuan->user->email ?? 'Email belum dicantumkan' }}</p>
+                                    <p class="detail-title">Catatan</p>
+                                    <p class="detail-copy">{{ $ajuan->catatan ?: 'Tidak ada catatan teknis tambahan pada pengajuan ini.' }}</p>
+                                    @if($ajuan->tanggal_assessment)<p class="detail-copy">Assessment: <strong>{{ $ajuan->tanggal_assessment->format('d M Y') }}</strong></p>@endif
+                                </div>
+                                <div class="detail-actions">
+                                    <p class="detail-title">Aksi Pengajuan</p>
+                                    <a href="{{ route('admin.pengajuan.edit', $ajuan) }}" class="detail-action primary">Edit Pengajuan</a>
+                                    <form action="{{ route('admin.pengajuan.destroy', $ajuan->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengajuan {{ $ajuan->nomor_ajuan }}?');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="detail-action secondary" style="color:#dc2626; cursor:pointer;">Hapus</button>
+                                    </form>
+                                    <a href="{{ route('admin.temuan.index', ['form' => 1, 'ajuan_id' => $ajuan->id]) }}" class="detail-action success">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/>
+                                        </svg>
+                                        Tambah Temuan
+                                    </a>
+                                </div>
 
-                                <a
-                                    href="{{ route('admin.pengajuan.edit', $ajuan) }}"
-                                    class="btn-edit"
-                                >
-                                    Edit
-                                </a>
+                                {{-- Daftar Temuan Pada Pengajuan Ini --}}
+                                <div class="detail-temuan-section">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                        <p class="detail-title" style="margin:0;">Daftar Temuan Keamanan ({{ $ajuan->temuans->count() }})</p>
+                                    </div>
 
-                                {{-- Delete --}}
-                                <form action="{{ route('admin.pengajuan.destroy', $ajuan->id) }}"
-                                    method="POST"
-                                    style="display:inline;"
-                                    onsubmit="return confirm('Yakin ingin menghapus pengajuan {{ $ajuan->nomor_ajuan }}?');">
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button type="submit"
-                                            style="
-                                                background:none;
-                                                border:none;
-                                                color:#dc2626;
-                                                font-weight:700;
-                                                font-size:12.5px;
-                                                cursor:pointer;
-                                                padding:0;
-                                                font-family:'Plus Jakarta Sans', sans-serif;
-                                            ">
-                                        Hapus
-                                    </button>
-                                </form>
-
+                                    @forelse($ajuan->temuans as $tmn)
+                                        @php
+                                            $sevLower = strtolower($tmn->severity ?? 'sedang');
+                                            $sevClass = match($sevLower) {
+                                                'kritis' => 'badge-sev-kritis',
+                                                'tinggi' => 'badge-sev-tinggi',
+                                                'rendah' => 'badge-sev-rendah',
+                                                default => 'badge-sev-sedang',
+                                            };
+                                        @endphp
+                                        <div class="temuan-item">
+                                            <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                                                <span class="badge {{ $sevClass }}" style="font-size:10px; padding:3px 8px;">
+                                                    {{ ucfirst($tmn->severity) }}
+                                                </span>
+                                                <div style="min-width:0;">
+                                                    <div style="font-weight:700; color:#1e293b; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                        {{ $tmn->judul }}
+                                                    </div>
+                                                    <div style="font-size:11px; color:#64748b; margin-top:2px;">
+                                                        Status: <strong>{{ $tmn->status ?? 'Menunggu Remediasi' }}</strong>
+                                                        @if($tmn->created_at) · {{ $tmn->created_at->format('d M Y') }} @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                                                <a href="{{ route('admin.temuan.edit', $tmn) }}" style="font-size:12px; font-weight:700; color:#2563eb; text-decoration:none; padding:4px 8px; border-radius:6px; background:#eff6ff;">
+                                                    Kelola
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div style="padding:16px; background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0; text-align:center; color:#94a3b8; font-size:12px;">
+                                            Belum ada temuan keamanan yang dicatat untuk pengajuan ini.
+                                        </div>
+                                    @endforelse
+                                </div>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7">
+                        <td colspan="8">
                             <div class="empty-state">
                                 <svg width="44" height="44" fill="none" stroke="#cbd5e1" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3"
@@ -689,5 +768,15 @@
             timer = setTimeout(() => this.closest('form').submit(), 600);
         });
     }
+
+    // Buka/tutup detail pengajuan seperti accordion pada desain referensi.
+    document.querySelectorAll('.ajuan-row').forEach(row => {
+        const toggle = () => document.getElementById(row.dataset.detail)?.classList.toggle('is-open');
+        row.addEventListener('click', toggle);
+        row.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); }
+        });
+        row.querySelectorAll('a, button, form').forEach(el => el.addEventListener('click', event => event.stopPropagation()));
+    });
 </script>
 @endpush
