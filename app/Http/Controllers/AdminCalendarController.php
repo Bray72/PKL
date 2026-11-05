@@ -17,11 +17,8 @@ class AdminCalendarController extends Controller
         // Kapasitas slot audit ditetapkan tetap: 5 slot per minggu.
         $maxQuota = 5;
 
-        $user = $request->user();
-
-        // Ambil semua ajuan pada tahun terpilih dengan filter hak akses admin
+        // Kalender slot harus menghitung seluruh pengajuan lintas admin/bidang.
         $allAjuans = Ajuan::with('user')
-            ->visibleToAdmin($user)
             ->where(function ($q) use ($year) {
                 $q->whereYear('tanggal_assessment', $year)
                   ->orWhere(function ($sub) use ($year) {

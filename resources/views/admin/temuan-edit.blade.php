@@ -406,7 +406,7 @@
         {{-- Footer --}}
         <div class="form-footer">
 
-            <a href="{{ route('admin.temuan.index') }}"
+            <a href="{{ route('admin.pengajuan.index') }}"
                class="btn-custom btn-cancel">
                 Batal
             </a>
