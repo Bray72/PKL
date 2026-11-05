@@ -242,20 +242,13 @@
     {{-- Header --}}
     <div class="calendar-header">
         <div>
-            <h1>Kalender Kuota & Slot Audit</h1>
-            <p>Jadwal pengajuan audit, slot kuota mingguan, dan kapasitas assessment tahun {{ $year }}</p>
+            <h1>Kalender Kuota Slot ITSA</h1>
+            <p>Jadwal pengajuan ITSA, slot kuota mingguan, dan kapasitas assessment tahun {{ $year }}</p>
         </div>
         
         <form class="calendar-controls" method="GET">
             <label for="year">Tahun:</label>
             <input id="year" name="year" type="number" min="2020" max="2100" value="{{ $year }}" style="width: 76px;">
-
-            <label for="quota" style="margin-left: 6px;">Kapasitas/Minggu:</label>
-            <select id="quota" name="quota">
-                @foreach([1, 2, 3, 4, 5] as $q)
-                    <option value="{{ $q }}" {{ $maxQuota == $q ? 'selected' : '' }}>{{ $q }} Slot</option>
-                @endforeach
-            </select>
 
             <button type="submit">Tampilkan</button>
         </form>

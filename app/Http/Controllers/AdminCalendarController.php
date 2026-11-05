@@ -14,9 +14,8 @@ class AdminCalendarController extends Controller
         $year = (int) $request->input('year', now()->year);
         $year = ($year >= 2020 && $year <= 2100) ? $year : now()->year;
 
-        // Default kapasitas slot audit per minggu (misal: 2 slot)
-        $maxQuota = (int) $request->input('quota', 2);
-        $maxQuota = ($maxQuota >= 1 && $maxQuota <= 10) ? $maxQuota : 2;
+        // Kapasitas slot audit ditetapkan tetap: 5 slot per minggu.
+        $maxQuota = 5;
 
         $user = $request->user();
 
