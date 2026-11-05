@@ -389,6 +389,16 @@
                     Pengajuan ITSA
                 </a>
 
+                <a href="{{ route('admin.calendar') }}"
+                   class="itsa-sidebar-link {{ request()->routeIs('admin.calendar') ? 'is-active' : '' }}">
+                    <span class="itsa-sidebar-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="17" rx="2" stroke-width="1.8"/><path stroke-width="1.8" d="M8 2v4m8-4v4M3 9h18M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01"/>
+                        </svg>
+                    </span>
+                    Kalender Kuota
+                </a>
+
                 <!-- <a href="{{ route('admin.temuan.index') }}" 
                 class="itsa-sidebar-link {{ request()->routeIs('admin.temuan.*') ? 'is-active' : '' }}">
                     <span class="itsa-sidebar-icon">

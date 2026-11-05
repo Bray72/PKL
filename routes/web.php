@@ -10,6 +10,7 @@ use App\Http\Controllers\RemediasiController;
 use App\Http\Controllers\ValidasiController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminCalendarController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -56,6 +57,9 @@ Route::middleware(['auth', 'role:1,2,3'])->group(function () {
 
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
         ->name('admin.dashboard');
+
+    Route::get('/admin/calendar', [AdminCalendarController::class, 'index'])
+        ->name('admin.calendar');
 
     // Pengajuan ITSA
     Route::get('/admin/pengajuan', [PengajuanController::class, 'index'])
