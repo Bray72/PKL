@@ -395,22 +395,27 @@
 
             <div class="form-grid">
 
-                {{-- Nama OPD (informasi readonly dari user login) --}}
-                <select
-                    name="user_id"
-                    id="user_id"
-                    class="form-control"
-                    required
-                >
-                    <option value="">-- Pilih OPD --</option>
-
-                    @foreach ($users as $user)
-                        <option value="{{ $user->id }}"
-                            {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                            {{ $user->opd }}
-                        </option>
-                    @endforeach
-                </select>
+                {{-- Nama Instansi / OPD --}}
+                <div class="form-group">
+                    <label class="form-label" for="nama_opd">
+                        Nama Instansi / OPD <span class="req">*</span>
+                    </label>
+                    <input type="text"
+                           id="nama_opd"
+                           name="nama_opd"
+                           class="form-control"
+                           list="opd_list"
+                           placeholder="Contoh: RS SOETOMO, Dinas Kesehatan..."
+                           value="{{ old('nama_opd') }}"
+                           required>
+                    <datalist id="opd_list">
+                        @foreach ($users as $user)
+                            @if(!empty($user->opd))
+                                <option value="{{ $user->opd }}"></option>
+                            @endif
+                        @endforeach
+                    </datalist>
+                </div>
 
                 {{-- Nama Aplikasi --}}
                 <div class="form-group">
