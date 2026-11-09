@@ -727,13 +727,6 @@
                         <input type="password" name="password_confirmation" class="form-input" minlength="8" placeholder="Ulangi password baru">
                     </div>
                 </div>
-
-                <div class="form-group" style="margin-top: 10px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="checkbox" id="edit_is_verified" name="is_verified" value="1" style="width: 16px; height: 16px;">
-                        <span>Akun Terverifikasi (Status Aktif)</span>
-                    </label>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="closeEditModal()">Batal</button>
@@ -757,7 +750,6 @@
         document.getElementById('edit_email').value = user.email || '';
         document.getElementById('edit_role_id').value = user.role_id || '';
         document.getElementById('edit_opd').value = user.opd || '';
-        document.getElementById('edit_is_verified').checked = !!user.email_verified_at;
         document.getElementById('editModal').style.display = 'flex';
     }
     function closeEditModal() {

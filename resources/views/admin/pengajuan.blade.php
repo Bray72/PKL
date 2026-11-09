@@ -547,9 +547,9 @@
                     <tr>
                         <th>ID</th>
                         <th>OPD</th>
-                        <th>Aplikasi</th>
-                        <th>Tanggal</th>
-                        <th>Temuan</th>
+                        <th>Nama Aplikasi/Sistem</th>
+                        <th>Tanggal Masuk Pengajuan</th>
+                        <th>Jumlah Temuan</th>
                         <th>Status</th>
                         <th style="text-align:center;"></th>
                     </tr>

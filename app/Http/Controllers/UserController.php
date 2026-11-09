@@ -75,7 +75,6 @@ class UserController extends Controller
             'password'              => 'required|string|min:8|confirmed',
             'role_id'               => 'required|exists:roles,id',
             'opd'                   => 'nullable|string|max:255',
-            'is_verified'           => 'nullable|boolean',
         ], [
             'name.required'         => 'Nama pengguna wajib diisi.',
             'email.required'        => 'Email wajib diisi.',
@@ -92,7 +91,7 @@ class UserController extends Controller
             'password'          => Hash::make($validated['password']),
             'role_id'           => $validated['role_id'],
             'opd'               => $validated['opd'] ?? null,
-            'email_verified_at' => $request->boolean('is_verified') ? now() : null,
+            'email_verified_at' => now(),
         ]);
 
         return redirect()
@@ -111,7 +110,6 @@ class UserController extends Controller
             'password'              => 'nullable|string|min:8|confirmed',
             'role_id'               => 'required|exists:roles,id',
             'opd'                   => 'nullable|string|max:255',
-            'is_verified'           => 'nullable|boolean',
         ], [
             'name.required'         => 'Nama pengguna wajib diisi.',
             'email.required'        => 'Email wajib diisi.',
@@ -126,7 +124,6 @@ class UserController extends Controller
             'email'             => $validated['email'],
             'role_id'           => $validated['role_id'],
             'opd'               => $validated['opd'] ?? null,
-            'email_verified_at' => $request->boolean('is_verified') ? ($user->email_verified_at ?? now()) : null,
         ];
 
         if (!empty($validated['password'])) {
