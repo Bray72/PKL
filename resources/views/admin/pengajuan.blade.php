@@ -159,27 +159,112 @@
     .pengajuan-table tbody tr.ajuan-row { cursor: pointer; }
     .ajuan-detail { display:none; background:#fbfdff; border-bottom:1px solid #e2e8f0; }
     .ajuan-detail.is-open { display:table-row; }
-    .detail-grid { display:grid; grid-template-columns:1.1fr 1fr .7fr; gap:28px; padding:24px 28px; }
-    .detail-title { margin:0 0 14px; color:#8da1bd; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
-    .detail-label { color:#8da1bd; font-size:11px; display:block; margin-bottom:3px; }
-    .detail-value { color:#344766; font-size:13px; font-weight:700; margin-bottom:14px; }
-    .detail-copy { color:#607492; font-size:12.5px; line-height:1.65; margin:0 0 12px; }
-    .detail-actions { border-left:1px solid #e2e8f0; padding-left:28px; }
-    .detail-action { display:block; width:100%; text-align:center; box-sizing:border-box; padding:10px 12px; border-radius:10px; text-decoration:none; margin-bottom:10px; font-size:13px; font-weight:700; transition: .15s; }
-    .detail-action.primary { background:#16305a; color:#fff; }
+    .detail-grid {
+        display:grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(190px, 220px);
+        gap:28px;
+        padding:24px 28px;
+        min-width:0;
+    }
+    .detail-grid > * { min-width:0; }
+    .detail-title { margin:0 0 12px; color:#1e293b; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; gap:6px; }
+    .detail-label { color:#64748b; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.03em; display:block; margin-bottom:4px; }
+    .detail-value { color:#0f172a; font-size:14px; font-weight:700; margin-bottom:14px; line-height:1.4; word-break:break-word; }
+    .detail-copy { color:#475569; font-size:13px; line-height:1.6; margin:0 0 12px; word-break:break-word; }
+    .detail-actions { border-left:1px solid #e2e8f0; padding-left:24px; display:flex; flex-direction:column; gap:8px; }
+    .detail-action { display:inline-flex; width:100%; align-items:center; justify-content:center; gap:8px; box-sizing:border-box; padding:10px 14px; border-radius:10px; text-decoration:none; font-size:12.5px; font-weight:700; transition:.15s; }
+    .detail-action.primary { background:#16305a; color:#fff; border:none; }
     .detail-action.primary:hover { background:#12243e; color:#fff; }
-    .detail-action.secondary { border:1px solid #dbe3ee; color:#475b78; background:#fff; }
-    .detail-action.secondary:hover { background:#f8fafc; }
-    .detail-action.success { background:#0f766e; color:#fff; border:none; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .detail-action.secondary { border:1.5px solid #e2e8f0; color:#334155; background:#fff; }
+    .detail-action.secondary:hover { background:#f8fafc; border-color:#cbd5e1; }
+    .detail-action.danger { border:1.5px solid #fecdd3; color:#dc2626; background:#fff; }
+    .detail-action.danger:hover { background:#fef2f2; border-color:#fca5a5; }
+    .detail-action.success { background:#0f766e; color:#fff; border:none; }
     .detail-action.success:hover { background:#0d655e; color:#fff; }
     .temuan-pill { display:inline-flex; min-width:28px; height:28px; align-items:center; justify-content:center; border-radius:10px; background:#f1f5f9; color:#344766; font-weight:800; text-align:center; }
+
+    /* Card styling inside detail */
+    .detail-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.03);
+    }
+    .doc-link-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 12px;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all .15s ease;
+    }
+    .doc-link-card:hover {
+        background: #eff6ff;
+        border-color: #93c5fd;
+        transform: translateY(-1px);
+    }
+    .doc-link-card:hover .doc-link-title {
+        color: #1d4ed8;
+    }
+    .doc-link-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #334155;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .doc-link-badge {
+        font-size: 11px;
+        font-weight: 700;
+        color: #2563eb;
+        background: #dbeafe;
+        padding: 3px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Detail tetap muat di layar tanpa horizontal scroll. */
+    .ajuan-detail > td { min-width:0; overflow:hidden; }
+    .detail-card, .detail-actions, .detail-copy, .detail-value { min-width:0; }
+
+    @media (max-width: 1100px) {
+        .detail-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+        .detail-actions {
+            grid-column: 1 / -1;
+            border-left: 0;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px 0 0;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: end;
+        }
+        .detail-actions .detail-title { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 700px) {
+        .detail-grid { grid-template-columns: 1fr; padding:18px 14px; gap:14px; }
+        .detail-actions {
+            grid-column: auto;
+            grid-template-columns: 1fr;
+        }
+        .detail-actions .detail-title { grid-column: auto; }
+        .doc-link-card { align-items:flex-start; }
+        .doc-link-title { white-space:normal; overflow-wrap:anywhere; }
+    }
 
     /* Temuan Section in Detail */
     .detail-temuan-section {
         grid-column: 1 / -1;
-        border-top: 1px dashed #e2e8f0;
-        margin-top: 6px;
-        padding-top: 18px;
+        border-top: 1px dashed #cbd5e1;
+        margin-top: 10px;
+        padding-top: 20px;
     }
     .temuan-item {
         background: #fff;
@@ -196,7 +281,11 @@
     .badge-sev-tinggi { background:#fff7ed; color:#ea580c; border:1px solid #fed7aa; }
     .badge-sev-sedang { background:#fffbeb; color:#d97706; border:1px solid #fde68a; }
     .badge-sev-rendah { background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; }
-    @media(max-width:800px){ .detail-grid{grid-template-columns:1fr}.detail-actions{border-left:0;padding-left:0}.pengajuan-table{min-width:850px} }
+    @media(max-width:960px){ 
+        .detail-grid { grid-template-columns: 1fr; gap: 20px; }
+        .detail-actions { border-left: 0; padding-left: 0; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+        .pengajuan-table { min-width: 850px; }
+    }
 
     .nomor-cell  { font-weight: 700; color: #1b365d; font-size: 11.5px; text-align:center; }
     .opd-name    { font-weight: 700; color: #1e293b; font-size: 12.5px; text-align:center; }
@@ -636,46 +725,90 @@
                         <td style="text-align:center; color:#8da1bd; font-size:18px;">⌄</td>
                     </tr>
                     <tr id="detail-{{ $ajuan->id }}" class="ajuan-detail">
-                        <td colspan="8">
+                        <td colspan="7">
                             <div class="detail-grid">
-                                <div>
-                                    <p class="detail-title">Informasi Aplikasi</p>
-                                    <span class="detail-label">Nama Aplikasi</span><div class="detail-value">{{ $ajuan->nama_aplikasi }}</div>
-                                    <span class="detail-label">Tujuan Assessment</span><p class="detail-copy">{{ $ajuan->tujuan_assessment ?: 'Belum dicantumkan.' }}</p>
-                                </div>
-                                <div>
-                                    <p class="detail-title">Profile & Catatan</p>
-                                    <p class="detail-copy"><strong>{{ $ajuan->user->name ?? '-' }}</strong> · {{ $ajuan->user->email ?? 'Email belum dicantumkan' }}</p>
-                                    <p class="detail-title">Catatan</p>
-                                    <p class="detail-copy">{{ $ajuan->catatan ?: 'Tidak ada catatan teknis tambahan pada pengajuan ini.' }}</p>
-                                    @if($ajuan->tanggal_assessment)<p class="detail-copy">Assessment: <strong>{{ $ajuan->tanggal_assessment->format('d M Y') }}</strong></p>@endif
-
+                                {{-- Kolom 1: Informasi Aplikasi --}}
+                                <div class="detail-card">
+                                    <p class="detail-title">
+                                        <svg width="15" height="15" fill="none" stroke="#2563eb" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        </svg>
+                                        Informasi Aplikasi
+                                    </p>
+                                    <span class="detail-label">Nama Aplikasi</span>
+                                    <div class="detail-value">{{ $ajuan->nama_aplikasi }}</div>
+                                    <span class="detail-label">Tujuan Assessment</span>
+                                    <p class="detail-copy">{{ $ajuan->tujuan_assessment ?: 'Belum dicantumkan.' }}</p>
                                     @php
                                         $dokumenPengajuan = $ajuan->dokumens->whereNull('temuan_id');
                                     @endphp
                                     @if($dokumenPengajuan->isNotEmpty())
-                                        <p class="detail-title" style="margin-top:14px;">Dokumen Pendukung</p>
-                                        <div style="display:flex; flex-direction:column; gap:6px;">
-                                            @foreach($dokumenPengajuan as $doc)
-                                                <a href="{{ route('dokumen.download', $doc) }}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:#2563eb; background:#eff6ff; border:1px solid #bfdbfe; padding:6px 12px; border-radius:8px; text-decoration:none; max-width:100%;">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                                    </svg>
-                                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $doc->nama_file }}</span>
-                                                </a>
-                                            @endforeach
+                                        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #e2e8f0;">
+                                            <span class="detail-label" style="margin-bottom:8px;">Dokumen Pendukung:</span>
+                                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                                @foreach($dokumenPengajuan as $doc)
+                                                    <a href="{{ route('dokumen.download', $doc) }}" target="_blank" rel="noopener" class="doc-link-card">
+                                                        <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+                                                            <svg width="16" height="16" fill="none" stroke="#2563eb" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                                            </svg>
+                                                            <span class="doc-link-title" title="{{ $doc->nama_file }}">{{ $doc->nama_file }}</span>
+                                                        </div>
+                                                        <span class="doc-link-badge">Unduh</span>
+                                                    </a>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
+
+                                {{-- Kolom 2: Profil, Catatan & Dokumen --}}
+                                <div class="detail-card">
+                                    <p class="detail-title">
+                                        <svg width="15" height="15" fill="none" stroke="#0f766e" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                        Profil Instansi & Catatan
+                                    </p>
+                                    <p class="detail-copy" style="margin-bottom: 8px;">
+                                        <strong>{{ $ajuan->user->opd ?? ($ajuan->user->name ?? '-') }}</strong>
+                                        @if(!empty($ajuan->user->email))
+                                            <span style="color:#94a3b8;">·</span> {{ $ajuan->user->email }}
+                                        @endif
+                                    </p>
+                                    
+                                    @if($ajuan->catatan)
+                                        <span class="detail-label" style="margin-top:10px;">Catatan Teknis</span>
+                                        <p class="detail-copy">{{ $ajuan->catatan }}</p>
+                                    @endif
+
+                                    @if($ajuan->tanggal_assessment)
+                                        <div style="font-size:12px; color:#475569; margin-top:8px; padding:6px 10px; background:#f1f5f9; border-radius:6px; display:inline-block;">
+                                            Tanggal Assessment: <strong style="color:#0f172a;">{{ $ajuan->tanggal_assessment->format('d M Y') }}</strong>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                {{-- Kolom 3: Aksi Pengajuan --}}
                                 <div class="detail-actions">
-                                    <p class="detail-title">Aksi Pengajuan</p>
-                                    <a href="{{ route('admin.pengajuan.edit', $ajuan) }}" class="detail-action secondary">Edit Pengajuan</a>
-                                    <form action="{{ route('admin.pengajuan.destroy', $ajuan->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengajuan {{ $ajuan->nomor_ajuan }}?');">
+                                    <p class="detail-title" style="margin-bottom:4px;">Aksi Pengajuan</p>
+                                    <a href="{{ route('admin.pengajuan.edit', $ajuan) }}" class="detail-action secondary">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                        </svg>
+                                        Edit Pengajuan
+                                    </a>
+                                    <form action="{{ route('admin.pengajuan.destroy', $ajuan->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengajuan {{ $ajuan->nomor_ajuan }}?');" style="margin:0;">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="detail-action secondary" style="color:#dc2626; cursor:pointer;">Hapus</button>
+                                        <button type="submit" class="detail-action danger" style="cursor:pointer;">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                            Hapus Pengajuan
+                                        </button>
                                     </form>
                                     <a href="{{ route('admin.temuan.index', ['form' => 1, 'ajuan_id' => $ajuan->id]) }}" class="detail-action success">
-                                        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/>
                                         </svg>
                                         Tambah Temuan

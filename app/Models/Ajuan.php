@@ -18,7 +18,6 @@ class Ajuan extends Model
 
     protected $fillable = [
         'user_id',
-        'created_by',
         'nomor_ajuan',
         'nama_aplikasi',
         'tujuan_assessment',
@@ -52,11 +51,6 @@ class Ajuan extends Model
         return $this->hasMany(Dokumen::class);
     }
 
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
     public function scopeVisibleToAdmin(Builder $query, User $user): Builder
     {
         // Role 1 adalah Superadmin, dapat melihat semua pengajuan
@@ -64,7 +58,7 @@ class Ajuan extends Model
             return $query;
         }
 
-        // Role 2 & 3 (Admin) hanya bisa melihat pengajuan yang dibuat oleh dirinya sendiri
-        return $query->where('created_by', $user->id);
+        // Admin hanya melihat pengajuan milik user/OPD yang terkait.
+        return $query->where('user_id', $user->id);
     }
 }

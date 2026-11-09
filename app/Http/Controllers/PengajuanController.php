@@ -19,7 +19,7 @@ class PengajuanController extends Controller
     {
         $user = $request->user();
 
-        // Eager load temuans dan dokumens dengan filter hak akses created_by jika bukan superadmin
+        // Eager load temuans dan dokumens dengan filter hak akses user_id.
         $query = Ajuan::with([
             'user',
             'dokumens',
@@ -146,7 +146,6 @@ class PengajuanController extends Controller
 
         $ajuan = Ajuan::create([
             'user_id'            => $userId,
-            'created_by'         => Auth::id(),
             'nomor_ajuan'        => $nomorAjuan,
             'nama_aplikasi'      => $validated['nama_aplikasi'],
             'tujuan_assessment'  => $validated['tujuan_assessment'],
@@ -188,7 +187,7 @@ class PengajuanController extends Controller
     public function edit(Request $request, Ajuan $ajuan)
     {
         $user = $request->user();
-        if ((int) $user->role_id !== 1 && $ajuan->created_by !== $user->id) {
+        if ((int) $user->role_id !== 1 && $ajuan->user_id !== $user->id) {
             abort(403, 'Anda tidak memiliki hak akses untuk mengedit pengajuan ini.');
         }
 
@@ -204,7 +203,7 @@ class PengajuanController extends Controller
     public function update(Request $request, Ajuan $ajuan)
     {
         $user = $request->user();
-        if ((int) $user->role_id !== 1 && $ajuan->created_by !== $user->id) {
+        if ((int) $user->role_id !== 1 && $ajuan->user_id !== $user->id) {
             abort(403, 'Anda tidak memiliki hak akses untuk mengubah pengajuan ini.');
         }
 
@@ -295,7 +294,7 @@ class PengajuanController extends Controller
     public function destroy(Request $request, Ajuan $ajuan) 
     { 
         $user = $request->user();
-        if ((int) $user->role_id !== 1 && $ajuan->created_by !== $user->id) {
+        if ((int) $user->role_id !== 1 && $ajuan->user_id !== $user->id) {
             abort(403, 'Anda tidak memiliki hak akses untuk menghapus pengajuan ini.');
         }
 

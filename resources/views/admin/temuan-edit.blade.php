@@ -408,7 +408,7 @@
                 </label>
 
                 @php
-                     = $temuan->dokumens;
+                    $lampiranTemuan = $temuan->dokumens;
                 @endphp
 
                 @if($lampiranTemuan->isNotEmpty())

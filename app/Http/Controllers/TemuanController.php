@@ -201,7 +201,7 @@ class TemuanController extends Controller
         }
 
         return redirect()
-            ->route('admin.temuan.index')
+            ->route('admin.pengajuan.index')
             ->with('success', 'Temuan berhasil diperbarui.');
     }
 
