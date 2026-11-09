@@ -24,6 +24,7 @@ class PengajuanController extends Controller
                 if ((int) $user->role_id !== 1) {
                     $q->where('created_by', $user->id);
                 }
+                $q->with('dokumens');
             }
         ])->visibleToAdmin($user);
 

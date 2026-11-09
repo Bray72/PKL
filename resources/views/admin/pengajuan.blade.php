@@ -674,6 +674,17 @@
                                                 </div>
                                             </div>
                                             <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                                @php
+                                                    $dokumenTemuan = $tmn->dokumens
+                                                        ->firstWhere('jenis_dokumen', 'bukti_pengujian')
+                                                        ?? $tmn->dokumens->firstWhere('jenis_dokumen', 'bukti_perbaikan')
+                                                        ?? $tmn->dokumens->first();
+                                                @endphp
+                                                @if($dokumenTemuan && $dokumenTemuan->path_file)
+                                                    <a href="{{ $dokumenTemuan->file_url }}" target="_blank" rel="noopener" style="font-size:12px; font-weight:700; color:#2563eb; text-decoration:none; padding:5px 10px; border-radius:6px; background:#eff6ff; border:1px solid #bfdbfe; transition:.15s;">
+                                                        Lihat File
+                                                    </a>
+                                                @endif
                                                 <a href="{{ route('admin.temuan.edit', $tmn) }}" style="font-size:12px; font-weight:700; color:#008000; text-decoration:none; padding:5px 10px; border-radius:6px; background:#eff6ff; border:1px solid #bffec8; transition:.15s;">
                                                     Kelola
                                                 </a>
