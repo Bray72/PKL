@@ -390,7 +390,7 @@
         </div>
         @endif
 
-        <form action="{{ route('admin.pengajuan.store') }}" method="POST" id="formPengajuan">
+        <form action="{{ route('admin.pengajuan.store') }}" method="POST" id="formPengajuan" enctype="multipart/form-data">
             @csrf
 
             <div class="form-grid">
@@ -462,6 +462,24 @@
                               name="catatan"
                               class="form-control"
                               placeholder="Keterangan tambahan, informasi teknis, atau permintaan khusus...">{{ old('catatan') }}</textarea>
+                </div>
+
+                {{-- Upload Dokumen Pengajuan --}}
+                <div class="form-group full">
+                    <label class="form-label" for="dokumen">
+                        Dokumen Pendukung / Surat Permohonan (Opsional)
+                    </label>
+                    <input type="file"
+                           id="dokumen"
+                           name="dokumen"
+                           class="form-control"
+                           accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.webp">
+                    <div style="font-size:11.5px; color:#64748b; margin-top:4px;">
+                        Format yang didukung: <strong>PDF, DOC, DOCX, XLS, XLSX, JPG, PNG, WEBP</strong> (Maks. 20MB)
+                    </div>
+                    @error('dokumen')
+                        <small style="color:#e11d48;">{{ $message }}</small>
+                    @enderror
                 </div>
 
             </div>
@@ -631,6 +649,23 @@
                                     <p class="detail-title">Catatan</p>
                                     <p class="detail-copy">{{ $ajuan->catatan ?: 'Tidak ada catatan teknis tambahan pada pengajuan ini.' }}</p>
                                     @if($ajuan->tanggal_assessment)<p class="detail-copy">Assessment: <strong>{{ $ajuan->tanggal_assessment->format('d M Y') }}</strong></p>@endif
+
+                                    @php
+                                        $dokumenPengajuan = $ajuan->dokumens->whereNull('temuan_id');
+                                    @endphp
+                                    @if($dokumenPengajuan->isNotEmpty())
+                                        <p class="detail-title" style="margin-top:14px;">Dokumen Pendukung</p>
+                                        <div style="display:flex; flex-direction:column; gap:6px;">
+                                            @foreach($dokumenPengajuan as $doc)
+                                                <a href="{{ route('dokumen.download', $doc) }}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:#2563eb; background:#eff6ff; border:1px solid #bfdbfe; padding:6px 12px; border-radius:8px; text-decoration:none; max-width:100%;">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                                    </svg>
+                                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $doc->nama_file }}</span>
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="detail-actions">
                                     <p class="detail-title">Aksi Pengajuan</p>

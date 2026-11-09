@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ajuan;
+use App\Models\Dokumen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -83,11 +84,15 @@ class PengajuanController extends Controller
             'tanggal_assessment' => 'nullable|date',
             'catatan'            => 'nullable|string|max:2000',
             'status'             => 'required|in:Diajukan,Proses Pengujian,Dalam Perbaikan,Selesai',
+            'dokumen'            => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,webp|max:20480',
+            'jenis_dokumen'      => 'nullable|string|max:100',
         ], [
             'nama_opd.required_without' => 'Nama Instansi / OPD wajib diisi.',
             'nama_aplikasi.required'     => 'Nama Aplikasi wajib diisi.',
             'tujuan_assessment.required' => 'Tujuan assessment wajib diisi.',
             'tanggal_assessment.date'    => 'Format tanggal assessment tidak valid.',
+            'dokumen.mimes'              => 'Format dokumen harus berupa PDF, Word, Excel, atau Gambar (Maks. 20MB).',
+            'dokumen.max'                => 'Ukuran dokumen maksimal 20 MB.',
         ]);
 
         // Cari atau hubungkan ke User (OPD) berdasarkan teks input bebas nama_opd
@@ -139,7 +144,7 @@ class PengajuanController extends Controller
 
         $nomorAjuan = sprintf('ITSA-%d-%03d', $year, $nextNumber);
 
-        Ajuan::create([
+        $ajuan = Ajuan::create([
             'user_id'            => $userId,
             'created_by'         => Auth::id(),
             'nomor_ajuan'        => $nomorAjuan,
@@ -150,6 +155,30 @@ class PengajuanController extends Controller
             'status'             => $validated['status'],
             'tanggal_pengajuan'  => now()->toDateString(),
         ]);
+
+        // Simpan dokumen pengajuan jika diupload
+        if ($request->hasFile('dokumen')) {
+            $file = $request->file('dokumen');
+            $namaFile = $file->getClientOriginalName();
+            $path = null;
+
+            try {
+                $path = $file->store('dokumen/pengajuan', 'supabase');
+            } catch (\Throwable $e) {}
+
+            if (!$path) {
+                $path = $file->store('dokumen/pengajuan', 'public');
+            }
+
+            Dokumen::create([
+                'ajuan_id'      => $ajuan->id,
+                'temuan_id'     => null,
+                'jenis_dokumen' => $request->input('jenis_dokumen', 'surat'),
+                'nama_file'     => $namaFile,
+                'path_file'     => $path,
+                'uploaded_by'   => Auth::id(),
+            ]);
+        }
 
         return redirect()
             ->route('admin.pengajuan.index')
@@ -163,6 +192,7 @@ class PengajuanController extends Controller
             abort(403, 'Anda tidak memiliki hak akses untuk mengedit pengajuan ini.');
         }
 
+        $ajuan->load('dokumens');
         $users = User::orderBy('opd')->get();
 
         return view('admin.pengajuan-edit', compact(
@@ -186,6 +216,13 @@ class PengajuanController extends Controller
             'tanggal_assessment' => 'nullable|date',
             'catatan'            => 'nullable|string|max:2000',
             'status'             => 'required|in:Diajukan,Proses Pengujian,Dalam Perbaikan,Selesai',
+            'dokumen'            => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,webp|max:20480',
+            'jenis_dokumen'      => 'nullable|string|max:100',
+        ], [
+            'nama_aplikasi.required'     => 'Nama Aplikasi wajib diisi.',
+            'tujuan_assessment.required' => 'Tujuan assessment wajib diisi.',
+            'dokumen.mimes'              => 'Format dokumen harus berupa PDF, Word, Excel, atau Gambar (Maks. 20MB).',
+            'dokumen.max'                => 'Ukuran dokumen maksimal 20 MB.',
         ]);
 
         $userId = $validated['user_id'] ?? $ajuan->user_id;
@@ -225,6 +262,30 @@ class PengajuanController extends Controller
             'catatan'            => $validated['catatan'] ?? null,
             'status'             => $validated['status'],
         ]);
+
+        // Simpan dokumen pengajuan jika diupload saat edit
+        if ($request->hasFile('dokumen')) {
+            $file = $request->file('dokumen');
+            $namaFile = $file->getClientOriginalName();
+            $path = null;
+
+            try {
+                $path = $file->store('dokumen/pengajuan', 'supabase');
+            } catch (\Throwable $e) {}
+
+            if (!$path) {
+                $path = $file->store('dokumen/pengajuan', 'public');
+            }
+
+            Dokumen::create([
+                'ajuan_id'      => $ajuan->id,
+                'temuan_id'     => null,
+                'jenis_dokumen' => $request->input('jenis_dokumen', 'surat'),
+                'nama_file'     => $namaFile,
+                'path_file'     => $path,
+                'uploaded_by'   => Auth::id(),
+            ]);
+        }
 
         return redirect()
             ->route('admin.pengajuan.index')
