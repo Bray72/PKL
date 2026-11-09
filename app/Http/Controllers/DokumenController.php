@@ -143,12 +143,12 @@ class DokumenController extends Controller
     {
         $user = Auth::user();
 
-        // Admin dapat mengunduh semua dokumen, sedangkan OPD hanya dokumen
-        // yang terkait dengan pengajuannya sendiri.
-        abort_unless(
-            $user->role_id === 1 || $dokumen->ajuan?->user_id === $user->id,
-            403
-        );
+        // Superadmin (role 1), Admin 1 & 2 (role 2, 3), atau OPD pemilik pengajuan
+        $isAuthorized = in_array((int)$user->role_id, [1, 2, 3]) 
+            || ($dokumen->ajuan && (int)$dokumen->ajuan->user_id === (int)$user->id)
+            || ((int)$dokumen->uploaded_by === (int)$user->id);
+
+        abort_unless($isAuthorized, 403, 'Anda tidak memiliki hak akses untuk mengunduh dokumen ini.');
 
         if (!$dokumen->path_file) {
             return back()->with('error', 'File tidak ditemukan.');

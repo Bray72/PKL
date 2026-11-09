@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Temuan;
 use App\Models\Ajuan;
+use App\Models\Dokumen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TemuanController extends Controller
 {
@@ -53,6 +55,10 @@ class TemuanController extends Controller
             'deskripsi' => 'nullable|string',
             'severity' => 'required|in:Rendah,Sedang,Tinggi,Kritis',
             'rekomendasi' => 'nullable|string',
+            'dokumen' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
+        ], [
+            'dokumen.mimes' => 'Format file dokumen temuan harus berupa PDF atau gambar (JPG, PNG, WEBP).',
+            'dokumen.max' => 'Ukuran file dokumen temuan maksimal 20 MB.',
         ]);
 
         // Pastikan admin hanya bisa membuat temuan pada ajuan yang dia miliki hak aksesnya
@@ -66,7 +72,7 @@ class TemuanController extends Controller
             }
         }
 
-        Temuan::create([
+        $temuan = Temuan::create([
             'ajuan_id' => $validated['ajuan_id'],
             'created_by' => Auth::id(),
             'judul' => $validated['judul'],
@@ -75,6 +81,32 @@ class TemuanController extends Controller
             'rekomendasi' => $validated['rekomendasi'] ?? null,
             'status' => 'Menunggu Remediasi', 
         ]);
+
+        // Simpan file lampiran dokumen temuan jika diupload
+        if ($request->hasFile('dokumen')) {
+            $file = $request->file('dokumen');
+            $namaFile = $file->getClientOriginalName();
+            $path = null;
+
+            try {
+                $path = $file->store('dokumen/temuan', 'supabase');
+            } catch (\Throwable $e) {
+                // fallback lokal jika koneksi supabase gagal
+            }
+
+            if (!$path) {
+                $path = $file->store('dokumen/temuan', 'public');
+            }
+
+            Dokumen::create([
+                'ajuan_id' => $temuan->ajuan_id,
+                'temuan_id' => $temuan->id,
+                'jenis_dokumen' => 'bukti_pengujian',
+                'nama_file' => $namaFile,
+                'path_file' => $path,
+                'uploaded_by' => Auth::id(),
+            ]);
+        }
 
         return redirect()
             ->route('admin.temuan.index')
@@ -118,6 +150,10 @@ class TemuanController extends Controller
             'severity' => 'required|in:Rendah,Sedang,Tinggi,Kritis',
             'rekomendasi' => 'nullable|string',
             'status' => 'required|string|max:255',
+            'dokumen' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
+        ], [
+            'dokumen.mimes' => 'Format file dokumen temuan harus berupa PDF atau gambar (JPG, PNG, WEBP).',
+            'dokumen.max' => 'Ukuran file dokumen temuan maksimal 20 MB.',
         ]);
 
         // Pastikan ajuan baru yang dipilih juga merupakan ajuan milik admin jika bukan superadmin
@@ -139,6 +175,30 @@ class TemuanController extends Controller
             'rekomendasi' => $validated['rekomendasi'] ?? null,
             'status' => $validated['status'],
         ]);
+
+        // Jika upload file baru saat update
+        if ($request->hasFile('dokumen')) {
+            $file = $request->file('dokumen');
+            $namaFile = $file->getClientOriginalName();
+            $path = null;
+
+            try {
+                $path = $file->store('dokumen/temuan', 'supabase');
+            } catch (\Throwable $e) {}
+
+            if (!$path) {
+                $path = $file->store('dokumen/temuan', 'public');
+            }
+
+            Dokumen::create([
+                'ajuan_id' => $temuan->ajuan_id,
+                'temuan_id' => $temuan->id,
+                'jenis_dokumen' => 'bukti_pengujian',
+                'nama_file' => $namaFile,
+                'path_file' => $path,
+                'uploaded_by' => Auth::id(),
+            ]);
+        }
 
         return redirect()
             ->route('admin.temuan.index')

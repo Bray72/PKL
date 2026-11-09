@@ -413,7 +413,8 @@
 
             <form
                 method="POST"
-                action="{{ route('admin.pengajuan.store') }}"
+                action="{{ route('admin.temuan.store') }}"
+                enctype="multipart/form-data"
             >
 
                 @csrf
@@ -579,6 +580,24 @@
 
                     </div>
 
+                                    {{-- UPLOAD DOKUMEN / GAMBAR TEMUAN --}}
+                    <div class="form-group full">
+                        <label class="form-label">
+                            Dokumen / Gambar Bukti Temuan (Opsional)
+                        </label>
+                        <input
+                            type="file"
+                            name="dokumen"
+                            class="form-control"
+                            accept=".pdf,.jpg,.jpeg,.png,.webp"
+                        >
+                        <div style="font-size:11.5px; color:#64748b; margin-top:4px;">
+                            Format yang didukung: <strong>PDF, JPG, JPEG, PNG, WEBP</strong> (Maks. 20MB)
+                        </div>
+                        @error('dokumen')
+                            <small style="color:#e11d48;">{{ $message }}</small>
+                        @enderror
+                    </div>
                 </div>
 
 

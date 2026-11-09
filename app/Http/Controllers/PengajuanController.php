@@ -16,9 +16,10 @@ class PengajuanController extends Controller
     {
         $user = $request->user();
 
-        // Eager load temuans dengan filter hak akses created_by jika bukan superadmin
+        // Eager load temuans dan dokumens dengan filter hak akses created_by jika bukan superadmin
         $query = Ajuan::with([
             'user',
+            'dokumens',
             'temuans' => function ($q) use ($user) {
                 if ((int) $user->role_id !== 1) {
                     $q->where('created_by', $user->id);
