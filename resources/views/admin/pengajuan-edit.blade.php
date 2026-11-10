@@ -152,30 +152,9 @@
                         OPD
                     </label>
 
-                    <select
-                        name="user_id"
-                        class="form-control"
-                        required
-                    >
-
-                        @foreach($users as $user)
-
-                            <option
-                                value="{{ $user->id }}"
-                                {{ old('user_id', $ajuan->user_id) == $user->id ? 'selected' : '' }}
-                            >
-                                {{ $user->opd }}
-                            </option>
-
-                        @endforeach
-
-                    </select>
-
-                    @error('user_id')
-                        <small class="error">
-                            {{ $message }}
-                        </small>
-                    @enderror
+                    <input type="text" name="nama_opd" class="form-control"
+                           value="{{ old('nama_opd', $ajuan->nama_opd ?? ($ajuan->user->opd ?? $ajuan->user->name ?? '')) }}" required>
+                    <small style="color:#94a3b8;">Nama instansi bisa diubah tanpa membuat user baru.</small>
 
                 </div>
 

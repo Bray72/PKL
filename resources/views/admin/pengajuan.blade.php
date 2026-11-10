@@ -493,17 +493,10 @@
                            id="nama_opd"
                            name="nama_opd"
                            class="form-control"
-                           list="opd_list"
                            placeholder="Contoh: RS SOETOMO, Dinas Kesehatan..."
                            value="{{ old('nama_opd') }}"
                            required>
-                    <datalist id="opd_list">
-                        @foreach ($users as $user)
-                            @if(!empty($user->opd))
-                                <option value="{{ $user->opd }}"></option>
-                            @endif
-                        @endforeach
-                    </datalist>
+                    <span style="font-size:11px; color:#94a3b8;">Bisa diisi bebas. Tidak membuat user baru.</span>
                 </div>
 
                 {{-- Nama Aplikasi --}}
@@ -677,7 +670,7 @@
                         {{-- OPD --}}
                         <td>
                             <div class="opd-name">
-                                {{ $ajuan->user->opd ?? ($ajuan->user->name ?? '-') }}
+                                {{ $ajuan->nama_opd ?? ($ajuan->user->opd ?? ($ajuan->user->name ?? '-')) }}
                             </div>
                         </td>
 
@@ -768,10 +761,10 @@
                                         <svg width="15" height="15" fill="none" stroke="#0f766e" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                         </svg>
-                                        Profil Instansi & Catatan
+                                        Catatan dan Tanggal assement
                                     </p>
                                     <p class="detail-copy" style="margin-bottom: 8px;">
-                                        <strong>{{ $ajuan->user->opd ?? ($ajuan->user->name ?? '-') }}</strong>
+                                        <strong>{{ $ajuan->nama_opd ?? ($ajuan->user->opd ?? ($ajuan->user->name ?? '-')) }}</strong>
                                         @if(!empty($ajuan->user->email))
                                             <span style="color:#94a3b8;">·</span> {{ $ajuan->user->email }}
                                         @endif

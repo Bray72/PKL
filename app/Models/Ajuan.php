@@ -18,6 +18,7 @@ class Ajuan extends Model
 
     protected $fillable = [
         'user_id',
+        'nama_opd',
         'nomor_ajuan',
         'nama_aplikasi',
         'tujuan_assessment',

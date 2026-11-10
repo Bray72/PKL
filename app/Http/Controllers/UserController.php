@@ -149,6 +149,14 @@ class UserController extends Controller
                 ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
 
+        // Cek apakah user masih memiliki data pengajuan terkait
+        $jumlahAjuan = \App\Models\Ajuan::where('user_id', $user->id)->count();
+        if ($jumlahAjuan > 0) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'Akun "' . $user->name . '" tidak dapat dihapus karena masih memiliki ' . $jumlahAjuan . ' data pengajuan terkait.');
+        }
+
         $userName = $user->name;
         $user->delete();
 

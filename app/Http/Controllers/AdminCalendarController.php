@@ -15,7 +15,7 @@ class AdminCalendarController extends Controller
         $year = ($year >= 2020 && $year <= 2100) ? $year : now()->year;
 
         // Kapasitas slot audit ditetapkan tetap: 5 slot per minggu.
-        $maxQuota = 5;
+        $maxQuota = 1;
 
         // Kalender slot harus menghitung seluruh pengajuan lintas admin/bidang.
         $allAjuans = Ajuan::with('user')
